@@ -1,4 +1,4 @@
-package api_test_some;
+package com.mycompany.app;
 
 import java.io.Console;
 import java.lang.annotation.Documented;
@@ -13,6 +13,12 @@ import java.util.function.Predicate;
  * java -d . Some.java
  * java api_test_demo.Some
  */
+
+        enum Colors {
+            Cyan, Green, Grey
+        }
+
+    enum Day { MODAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY }
 
 public class Some
 {
@@ -32,20 +38,17 @@ public class Some
         }
 
         int[] someArr_ = { 21, 33, 19, 39 };
-        var so = "this is str";
+        String so = "this is str";
 
         for (int i = 0; i < someArr_.length; i++) {
             System.out.println("No is " + someArr_[i] + so);
         }
 
-        enum Colors {
-            Cyan, Green, Grey
-        }
 
         Colors colors = Colors.Cyan;
         System.out.println(colors.ordinal());
 
-        System.out.println(cal(Day.FRIDAY));
+        // System.out.println(cal(Day.FRIDAY));
 
         List<String> eles = new ArrayList<String>();
         eles.add("one");
@@ -80,8 +83,7 @@ public class Some
         return ls;
     }
  
-
-    enum Day { MODAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY }
+    /*
 
     public static String cal(Day d)
     {
@@ -94,7 +96,6 @@ public class Some
         };
     }
 
-    /*
     int calculateTotalPrice(List<Product> products) {
 
     int totalPrice = 0;
@@ -105,7 +106,7 @@ public class Some
 }
     }*/
     Afce<String> afce = new Afce<String>();
-    afce.PrintType();
+    // afce.PrintType();
 
 }
 
