@@ -1,12 +1,13 @@
 // package multithr;
 import java.util.Scanner;
 
+// R and Ws are atomic for all ref and prim var exc long and double
 public class Interleaving{
 
     private static int count;
 
     // avoid interleaving - mutex or or monitor lock or mutual exclusion to run one thr at a time
-    public static synchronized void increment() {
+    public static  void increment() {
 		count++;
     }
 
@@ -15,7 +16,8 @@ public class Interleaving{
 		// Iterleaving inte = new Iterleaving();
 		Thread thread1 = new Thread(new Runnable(){
 			public void run(){
-				double no = 1E4;
+				// atomic except for long and double
+				double no = 1E4; // 1E4 and above having sync issues
 				do {
 					increment();
 				} while (no-- > 0);
@@ -41,7 +43,7 @@ public class Interleaving{
 		// Scanner sc = new Scanner(System.in);
 		// sc.nextLine();
 
-		System.out.printf("Count is %d", count);
+		System.out.printf("Count is %d and name is %s", count, thread1.getPriority());
 
 		/* interleaving
 		// w/o synchronized the resuld may must likely not be 100

@@ -1,12 +1,18 @@
 import static java.lang.Thread.activeCount;
 import static java.lang.Thread.sleep;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 // import jakarta.validation.Valid;
 class CntdnLatch {
 	public static void main(String args[]){
 		// Can be used where a collection can be looped in parallel - thred safe
 		CountDownLatch cdl = new CountDownLatch(3);
+		/*  
+		ConcurrentSkipListMap conc = new ConcurrentSkipListMap();
+		conc.put("key", "val");
+		*/
+
 
 		new Thread(new Runner(cdl)).start();
 		new Thread(new Runner(cdl)).start();

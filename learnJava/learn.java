@@ -524,80 +524,107 @@ public class learn {
         });
 	}
 
-    public class SampleClass implements Comparator<String> {
+	public class ImplIter implements Iterable<String>{
 
-        //@Override
-        public int compare(String t, String t1) {
-            // throw new UnsupportedOperationException("Not supported yet.");
-            // for t < t1
-            // return 1;
-            // else ie for equal
-            // return 0;
+		LinkedList<String> link = new LinkedList();
+
+		class ImplIterat implements Iterator<String>{
+
+			int index = 0;
+
+			public boolean hasNext() {
+				return link.size() > index;
+			}
+
+			public String next() {
+				if(hasNext())
+					return link.get(index);
+				else
+					throw new UnsupportedOperationException("No 'next' ele ");
+			}
+		}
+
+		public Iterator<String> iterator() {
+			return new ImplIterat();
+			// TODO Auto-generated method stub
+			// throw new UnsupportedOperationException("Unimplemented method 'iterator'");
+		}
+	}
+
+	public class SampleClass implements Comparator<String> {
+
+		//@Override
+		public int compare(String t, String t1) {
+			// throw new UnsupportedOperationException("Not supported yet.");
+			// for t < t1
+			// return 1;
+			// else ie for equal
+			// return 0;
 			if (t.length() < t.length())
 				return -1;
 			else
 				return 1;
 
 			return 0;
-        }
+		}
 
-    }
+	}
 
-    public static void var(String par) {
-        System.out.println("" + par);
-        String[] arr = new String[]{"a", "b", "c", "d", "e"};
-        Stream<String> streamOfArrayFull = Arrays.stream(arr);
-        Arrays.stream(arr, 1, 3);
+	public static void var(String par) {
+		System.out.println("" + par);
+		String[] arr = new String[]{"a", "b", "c", "d", "e"};
+		Stream<String> streamOfArrayFull = Arrays.stream(arr);
+		Arrays.stream(arr, 1, 3);
 
-        Sum s = (int x, int y) -> x + y;
+		Sum s = (int x, int y) -> x + y;
 
-        System.out.println("Sum is " + s.calc(3, 9));
+		System.out.println("Sum is " + s.calc(3, 9));
 
-        Cons cs = (Double in) -> System.out.println("Input processed is " + in);
-        cs.accept(2.3);
+		Cons cs = (Double in) -> System.out.println("Input processed is " + in);
+		cs.accept(2.3);
 
-        Pre pr = (double in) -> in > 3;
-        System.out.println("Pred res is " + pr.test(2.2));
+		Pre pr = (double in) -> in > 3;
+		System.out.println("Pred res is " + pr.test(2.2));
 
-        Funct func = (Integer w) -> w + 1;
-        System.out.println("Func res is " + func.apply(2));
+		Funct func = (Integer w) -> w + 1;
+		System.out.println("Func res is " + func.apply(2));
 
-        Pro pro = () -> 2;
-        System.out.println("Pro res is " + pro.get());
+		Pro pro = () -> 2;
+		System.out.println("Pro res is " + pro.get());
 
-        // FileOutputStream
-        // ObjectOutputStream
-    }
+		// FileOutputStream
+		// ObjectOutputStream
+	}
 
-    interface Cons extends Consumer<Double> {
+	interface Cons extends Consumer<Double> {
 
-        @Override
-        public void accept(Double in);
-    }
+		@Override
+		public void accept(Double in);
+	}
 
-    // interface Pre extends Predicate<Double> {
-    interface Pre extends DoublePredicate {
+	// interface Pre extends Predicate<Double> {
+	interface Pre extends DoublePredicate {
 
-        @Override
-        public boolean test(double in);
-    }
+		@Override
+		public boolean test(double in);
+	}
 
-    interface Funct extends Function<Integer, Integer> {
+	interface Funct extends Function<Integer, Integer> {
 
-        @Override
-        public Integer apply(Integer d);
-    }
+		@Override
+		public Integer apply(Integer d);
+	}
 
-    interface Pro extends Supplier<Integer> {
+	interface Pro extends Supplier<Integer> {
 
-        @Override
-        Integer get();
-    }
+		@Override
+		Integer get();
+	}
 
-    // functional interface
-    public interface Sum {
+	// functional interface
+	public interface Sum {
 
-        public int calc(int x, int y);
-        public String calc(int y);
-    }
-}
+		public int calc(int x, int y);
+		public String calc(int y);
+	}
+	}
