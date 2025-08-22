@@ -8,20 +8,30 @@ import java.lang.reflect.Method;
 public class Annot {
 
 	@SomeAnnots(author = "Meth LasMeth", date = "2/2/2025", reviewers = { "fir", "sec" })
-	public void SomeMeth(){
+	public void SomeMeth() throws Exception {
 		Method m[] = getClass().getMethods();
-		System.out.printf("Val is %s\n", m[1].getName());
-		SomeAnnots an = m[1].getAnnotation(SomeAnnots.class);
+		// System.out.printf("Val is %s\n", m[1].getName());
+
+		Method me = getClass().getMethod("SomeMeth");
+		SomeAnnots an = me.getAnnotation(SomeAnnots.class);
 		System.out.printf("Val is %s\n", an);
 
 		Class cla = getClass();
 		Annotation val = cla.getAnnotation(SomeAnnots.class);
 		System.out.printf("Val is %s\n", val);
+
+		SomeAnnots ann = Class.forName("SomeAnn").getAnnotation(SomeAnnots.class);
+		System.out.printf("Val is %s\n", ann);
 	}
 
 	public static void main(String as[]){
 		Annot ann = new Annot();
+		try {
 		ann.SomeMeth();
+		}
+		catch (Exception ex){
+			System.out.printf("Exception is %s", ex.getMessage());
+		}
 	}
 }
 
@@ -37,6 +47,7 @@ public class Annot {
 	String[] reviewers();
 }
 
+@SomeAnnots(author = "Class LasClas", date = "4/4/2025", reviewers = { "re1", "re2" })
 class SomeAnn {
 /* 
     public String SomeMeth() {

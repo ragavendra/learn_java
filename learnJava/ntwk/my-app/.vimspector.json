@@ -1,0 +1,52 @@
+/*
+This should fetch the class paths to fix the ClassNotFoundException
+:YcmCompleter ExecuteCommand vscode.java.resolveClasspath <main class> <project name> runtime
+To get the port#
+:YcmCompleter ExecuteCommand vscode.java.startDebugSession
+*/
+{
+  "configurations": {
+    "Java Launch": {
+      "adapter": "vscode-java",
+      "configuration": {
+        "request": "launch",
+        "mainClass": "com.mycompany.app.HttpConn",
+        "sourcePaths": [ "${workspaceRoot}/src/main/java" ],
+        "classPaths": [ "${workspaceRoot}/target/classes", "/run/media/scion/PART2/repos/learn_java/learnJava/ntwk/my-app/target/classes", "/home/scion/.m2/repository/org/json/json/20250517/json-20250517.jar" ],
+        "project": "TestApplication",
+		"args": "https://jsonplaceholder.typicode.com/todos revThestr",
+        "stopOnEntry": true,
+        "console": "integratedTerminal",
+        "stepFilters": {
+          "skipClasses": [ "$$JDK" ]
+        }
+      }
+    },
+    "Java Attach": {
+      "adapter": "vscode-java",
+      "configuration": {
+        "request": "attach",
+        "sourcePaths": [ "${workspaceRoot}/src/main/java" ],
+        "project": "TestApplication",
+        "stopOnEntry": true,
+        "hostName": "localhost",
+        "port": "${JVMDebugPort}",
+        "stepFilters": {
+          "skipClasses": [ "$$JDK" ]
+        }
+      }
+    },
+    "Attach with vscode-javac": {
+      "adapter": "vscode-javac",
+      "configuration": {
+        "request": "attach",
+        "project": "TestApplication",
+        "port": "${debugPort}",
+        "sourceRoots": [
+          "${workspaceRoot}/src/main/java"
+        ]
+      }
+    }
+  }
+}
+

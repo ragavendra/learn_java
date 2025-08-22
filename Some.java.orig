@@ -14,12 +14,6 @@ import java.util.function.Predicate;
  * java api_test_demo.Some
  */
 
-enum Colors {
-	Cyan, Green, Grey
-}
-
-enum Day { MODAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY }
-
 public class Some
 {
     public static void main(String[] args)
@@ -42,6 +36,10 @@ public class Some
 
         for (int i = 0; i < someArr_.length; i++) {
             System.out.println("No is " + someArr_[i] + so);
+        }
+
+        enum Colors {
+            Cyan, Green, Grey
         }
 
         Colors colors = Colors.Cyan;
@@ -160,6 +158,7 @@ class Product extends OtherClass {
     String getPrice(String val)
     {
         setVarOne(val + "1");
+
         return getVarOne();
     }
 
