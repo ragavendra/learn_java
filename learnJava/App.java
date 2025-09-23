@@ -13,3 +13,15 @@ public class App {
         System.out.println(new App().getGreeting());
     }
 }
+
+class Somei extends App{
+
+	public String some;
+	public Some so;
+
+    String tring() {
+		throw new Exception();
+        // return "Some []";
+    }
+
+}

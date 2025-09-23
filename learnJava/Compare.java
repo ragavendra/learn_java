@@ -3,7 +3,7 @@ import java.util.Comparator;
 public class Compare implements Comparator<Person> {
 
 	public int compare(Person arg0, Person arg1) {
-		return arg0.getFirstName().compareTo(arg1.getFirstName());
+		return arg0.firstName().compareTo(arg1.firstName());
 	}
 }
 /* 

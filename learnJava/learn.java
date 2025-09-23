@@ -33,6 +33,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.DoublePredicate;
@@ -51,9 +52,11 @@ import javax.swing.text.html.HTMLDocument;
 // Use this editor to write, compile and run your Java code online
 
 class Main {
-	public static void main(String[] args) {
+		public static void main(String[] args) {
 		var per1i = new Person("Fir1", "Las1");
 		var cmp = new Compare();
+		List<Person> perLis = new ArrayList();
+			/* 
 		List<Person> perLis = new ArrayList(){
 			public String toString(){
 				var res = "";
@@ -67,20 +70,48 @@ class Main {
 				return res;
 			}
 		};
+			*/
+
+		var per = new Person("Fir1", "Las2");
+		perLis.add(per);
 		var per1 = new Person("Fir1", "Las1");
 		perLis.add(per1);
-
-		var per = new Person("Firs", "Las");
-		perLis.add(per);
 		perLis.add(new Person("Fir2", "Las2"));
-
 		perLis.sort(cmp);
+		System.out.println("Sorted list is " + perLis);
 
-		System.out.println("Sorted list is " + perLis.toString());
+		calc((p, q) -> p + q, 3, 4);
+		calc((p, q) -> p + q, "str1 ", "str2");
+		calc((p, q) -> p / q, 6.0, 3.0);
 
-		for(var it: perLis){
-			System.out.println("Ite is " + it);
-		}
+/* 
+		// perLis.sort(cmp);
+		perLis.sort(new Comparator<Person>(){
+			public int compare(Person p1, Person p2){
+				return p1.getFirstName().compareTo(p2.getFirstName());
+			}	
+		});
+
+*/		
+		perLis.sort(new FirLasComp<Person>(){
+			public int compare(Person p1, Person p2){
+				int res = p1.firstName().compareTo(p2.firstName());
+				return (res == 0 ? AnotherComp(p1, p2) : res);
+			}
+
+			public int AnotherComp(Person p1, Person p2){
+				return p1.lastName().compareTo(p2.lastName());
+			}
+		});
+/* 
+		// lamda on functional interfaces
+		perLis.sort((p1, p2) -> {
+				int res = p1.firstName().compareTo(p2.firstName());
+				return (res == 0 ? p1.lastName().compareTo(p2.lastName()) : res);
+		});
+*/
+
+		System.out.println("Sorted list is " + perLis);
 
 		// int[] input = {24, 33, 16, 35, 15, 21, 33, 55, 77, 10, 75};
 
@@ -91,6 +122,7 @@ class Main {
 			System.out.println("Ele is " + ele);
 		}
 
+
 		// int[] ind = {0, 3, 4, 6, 7, 10};
 		int[] ind = {0, 3, 3, 6, 6, 8};
 		// -1, 1, -1, -4
@@ -98,46 +130,222 @@ class Main {
 		// ArraySum(input, ind);
 		System.out.println("Result is " + ArraySum(input, ind));
 
-	}
+		var someArr = Arrays.asList(2, 4, 6, 8);
+		someArr.forEach(ele -> System.out.println("Ele is " + ele.toString()));
+		var somArr = Arrays.asList(new double[]{2.4334, 4.4324}, new double[]{3.3334, 2.0324}, new double[]{4.3334, 2.9324});
 
-	public static int ArraySum(int[] input, int[] ind) {
 
-		// int[] resSum = new int[ind.size()/2];
-		// ind = {0, 6, 7, 15, 16, 26};
-		int sum = 0;
-		int sumLoop = 0;
-		int st = 0;
-		int end = 0;
-		// int times = ind.length/2;
+		BiConsumer<Double, Double> op =  ((p1, p2) -> System.out.printf("Item is lat %.3f lon %.3f\n",p1, p2));
 
-		// loops no. of sub array times
-		for(int i=0; i< ind.length; i = i+2) {
-			st = ind[i];
-			end = ind[i+1];
-			System.out.println("St " + st);
-			System.out.println("En " + end);
+		// cons func interf
+		somArr.forEach(it -> op.accept(it[0], it[1]));
+/* 
+		var firstPt = somArr.get(0);
+		// accept(op, firstPt[0], firstPt[1]);
+		somArr.forEach(it -> accept(op, it[0], it[1]));
+*/
+		List<String> someLis = new ArrayList();
+		someLis.addAll(List.of("mesha", "vrushaba", "mithuna", "karkataka", "simha", "kanya", "thula", "vrishika", "dhanusu", "makara", "kumbha", "meena"));
 
-			// loop each sub array
-			for(int y=st; y<end; ++y){
-				//for(int z = input[y]; z < input[end]; z++) {
-				System.out.println("input[y] " + input[y]);
+		// pred func interf
+		someLis.removeIf(s -> s.startsWith("karka"));
 
-				sum = sum+input[y];
-				//}
-			}
+		// func func interf
+		someLis.replaceAll(it -> it.charAt(0) + " - " + it);
+		someLis.forEach(it -> System.out.println("Item is " + it));
 
-			System.out.println("Res is " + sum);
+		var emptyStrs = new String[10];
+		Arrays.fill(emptyStrs, "");
 
-			if(sum > sumLoop)
-				sumLoop = sum;
+		// intfunc func interf is used
+		Arrays.setAll(emptyStrs, i -> i++ + ". " + switch(i) { case 0 -> "one"; case 2 -> "two"; default -> "";});
+		System.out.println(Arrays.toString(emptyStrs));
+		String[] names = {"mesha", "vrushaba", "mithuna", "karkataka", "simha", "kanya", "thula", "vrishika", "dhanusu", "makara", "kumbha", "meena"};
 
-			sum = 0;
+		var emptyInts = new Integer[10];
+		var rnd = new Random();
+		Arrays.setAll(emptyInts, i -> rnd.nextInt(100));
+		System.out.println(Arrays.toString(emptyInts));
 
+		// Supplier<Integer> s;
+		var res = randSelNames(25, names, () -> (new Random().nextInt(0, names.length)));
+		System.out.println(Arrays.toString(res));
+
+		if(someLis instanceof List ls){
+			System.out.printf("%s is of type %s\n", "someLis", ls.getClass().getSimpleName().toString());
 		}
 
+		// obj arr can be used to store any type of data
 
-		return sumLoop;
+		Arrays.sort(emptyInts);
+		System.out.println(Arrays.toString(emptyInts));
+		Arrays.fill(emptyInts, 3);
+		Integer ar[] = Arrays.copyOf(emptyInts, 3);
+
+		// all methods in an interf w/o a body is an abstract method
+
+		// streams
+		var str1 = someLis.stream().
+		filter(ele -> ele.contains("t"))
+		.map(String::toLowerCase)
+		.sorted(Comparator.reverseOrder());
+		// .forEach(System.out::println);
+
+		var str3 = Stream.of("one", "two", "three");
+		var str4 = Stream.of(2, 3, 5.5);
+
+		// preserves natural order
+		LinkedHashMap<Integer, String> linkedHashMap = new LinkedHashMap<>();
+		linkedHashMap.put(3, "");
+
+		// sorts by keys
+		TreeMap<String, String> treeMap = new TreeMap<>();
+
+		var str2 = someLis.stream()
+		.filter(it -> it.endsWith("a"))
+		.map(String::toUpperCase)
+		.sorted(Comparator.naturalOrder());
+
+		Stream.concat(str2, str4).forEach(System.out::println);
+    }
+
+	interface SomeInter {
+
+		public static String someVar = "";
+		// public String someVare;
+		// ExtSome someCla;
+
+		// has to have body
+		private void SomeMeth(){}
+
+		// no body here and is an abstract
+		public void SomeMetho();
+
+		// only these can have body
+		public default void SomeMetho(String one){}
+		public default void SomMetho(){}
+		public static void SomeMethod(){}
+		private void SomeMet(){}
+		// abstract record someRec(int one, String two){};
+		// abstract enum Some{ one, two, three };
 	}
+
+	class SDFSD {
+
+        static String someVar;
+        ExtSome someCla;
+
+        void Nobody() {
+            // TODO Auto-generated method stub
+
+        }
+    }
+
+    class ExtSome extends SomeCla {
+
+        static String someVar;
+        ExtSome someCla;
+
+        @Override
+        void Nobody() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
+
+    abstract class SomeCla {
+        // abstract record someRec(int one, String two){};
+        // abstract enum Some{ one, two, three };
+
+        void SomeMeth() {
+        }
+
+        abstract void Nobody();
+
+        // blah (foo [bar 'ba|z'])
+    }
+
+    // records are final fields and get like rec.lastName()
+    public record SomeRec(String name, String lastName, String email, int id) {
+
+    }
+
+	// supp func interface
+    public static String[] randSelNames(int count, String[] ip, Supplier<Integer> s) {
+        String[] selVals = new String[count];
+        for (int i = 0; i < count; i++) {
+            selVals[i] = ip[s.get()];
+        }
+        return selVals;
+
+    }
+
+    // func inter are of Cons, Function, Pred and Supp
+    public static <R> R calc(BinaryOperator<R> meth, R p1, R p2) {
+        R res = meth.apply(p1, p2);
+        System.out.println("Op of operation is " + res);
+        return res;
+    }
+
+    // using custom func interf
+    public static <R> R calce(Operation<R> meth, R p1, R p2) {
+        R res = meth.operate(p1, p2);
+        System.out.println("Op of operation is " + res);
+        return res;
+    }
+
+    public static <S> void accept(BiConsumer<S, S> oper, S val1, S val2) {
+        oper.accept(val1, val2);
+    }
+
+    interface Operation<I> {
+
+        public I operate(I p1, I p2);
+    }
+
+    public static int ArraySum(int[] input, int[] ind) {
+
+        // int[] resSum = new int[ind.size()/2];
+        // ind = {0, 6, 7, 15, 16, 26};
+        int sum = 0;
+        int sumLoop = 0;
+        int st = 0;
+        int end = 0;
+        // int times = ind.length/2;
+
+        // loops no. of sub array times
+        for (int i = 0; i < ind.length; i = i + 2) {
+            st = ind[i];
+            end = ind[i + 1];
+            System.out.println("St " + st);
+            System.out.println("En " + end);
+
+            // loop each sub array
+            for (int y = st; y < end; ++y) {
+                //for(int z = input[y]; z < input[end]; z++) {
+                System.out.println("input[y] " + input[y]);
+
+                sum = sum + input[y];
+                //}
+            }
+
+            System.out.println("Res is " + sum);
+
+            if (sum > sumLoop) {
+                sumLoop = sum;
+            }
+
+            sum = 0;
+
+        }
+
+        return sumLoop;
+    }
+}
+
+// @FunctionalInterface
+interface FirLasComp<S> extends Comparator<S> {
+
+    public int AnotherComp(S per1, S per2);
 }
 
 /* 
@@ -181,113 +389,112 @@ class Person{
 		return firstName + " " + lastName;
 	}
 }
-*/
-
+ */
 public class learn {
 
-	public void CopyStream() {
-		List<String> strings = List.of("one", "two", "three", "four");
-		Map<String, String>  map = Map.of("key", "val", "2", "val2");
-		Function<String, Integer> toLength = String::length;
-		List<Integer> ints = strings.stream()
-			.map(toLength)
-			.collect(Collectors.toList());
+    public void CopyStream() {
+        List<String> strings = List.of("one", "two", "three", "four");
+        Map<String, String> map = Map.of("key", "val", "2", "val2");
+        Function<String, Integer> toLength = String::length;
+        List<Integer> ints = strings.stream()
+                .map(toLength)
+                .collect(Collectors.toList());
 
-		var ints_ = strings.stream()
-			.mapToInt(String::length)
-			.summaryStatistics();
+        var ints_ = strings.stream()
+                .mapToInt(String::length)
+                .summaryStatistics();
 
-		System.out.println("List is " + ints);
+        System.out.println("List is " + ints);
 
-	}
+    }
 
-	public void CallableFuture() {
-		ExecutorService es = Executors.newCachedThreadPool();
-		Future<?> f = es.submit(new Callable<Void>() {
-			public Void call() {
-				return null;
-			}
-		});
+    public void CallableFuture() {
+        ExecutorService es = Executors.newCachedThreadPool();
+        Future<?> f = es.submit(new Callable<Void>() {
+            public Void call() {
+                return null;
+            }
+        });
 
-		Future<String> fS = es.submit(new Callable<String>() {
-			public String call() {
-				return "";
-			}
-		});
+        Future<String> fS = es.submit(new Callable<String>() {
+            public String call() {
+                return "";
+            }
+        });
 
-		try {
-			f.get();
-			System.err.println("Future Res is " + fS.get());
-		} catch (InterruptedException ex) {
-		} catch (ExecutionException ex) {
-		}
-	}
+        try {
+            f.get();
+            System.err.println("Future Res is " + fS.get());
+        } catch (InterruptedException ex) {
+        } catch (ExecutionException ex) {
+        }
+    }
 
-	public void StreamsMapFilterReduce() {
-		String fil = "/tmp/so", str = "rama";
-		try(var strm = Files.lines(Path.of(fil))) {
-			long count = strm.filter(line -> line.contains(str)).count();
+    public void StreamsMapFilterReduce() {
+        String fil = "/tmp/so", str = "rama";
+        try (var strm = Files.lines(Path.of(fil))) {
+            long count = strm.filter(line -> line.contains(str)).count();
 
-			// var c = strm.takeWhile(bo -> bo.contains('bo'));
-			System.out.println("Found " + count + " of " + str);
-		} catch (IOException ex) {
-			System.err.println("Exception is " + ex.toString());
-		}
+            // var c = strm.takeWhile(bo -> bo.contains('bo'));
+            System.out.println("Found " + count + " of " + str);
+        } catch (IOException ex) {
+            System.err.println("Exception is " + ex.toString());
+        }
 
-		IntStream.range(0, 7)
-			// .forEach(ic -> System.err.println("Ele is " + ic));
-			.takeWhile(no -> no > 2)
-			.forEach(System.out::println);
+        IntStream.range(0, 7)
+                // .forEach(ic -> System.err.println("Ele is " + ic));
+                .takeWhile(no -> no > 2)
+                .forEach(System.out::println);
 
-		// IntStream.iterate(0, 8);
-		List<String> list = List.of("one", "two", "three");
-		list
-			.stream()
-			.filter(pr -> pr.contains("pr"))
-			.forEach(cr -> System.out.println("" + cr));
+        // IntStream.iterate(0, 8);
+        List<String> list = List.of("one", "two", "three");
+        list
+                .stream()
+                .filter(pr -> pr.contains("pr"))
+                .forEach(cr -> System.out.println("" + cr));
 
-		list
-			.stream()
-			// .map(ele -> ele.toUpperCase())
-			.filter(pr -> pr.length() == 3)
-			.map(String::toUpperCase)
-			// .forEach(ele -> System.out.println(ele));
-			.forEach(System.out::println);
-	}
+        list
+                .stream()
+                // .map(ele -> ele.toUpperCase())
+                .filter(pr -> pr.length() == 3)
+                .map(String::toUpperCase)
+                // .forEach(ele -> System.out.println(ele));
+                .forEach(System.out::println);
+    }
 
-	public void Semaphore(Semaphore s) {
-		try {
-			s.acquire();
-			s.release();
-			s.wait();
-			s.acquire();
-			s.release();
+    public void Semaphore(Semaphore s) {
+        try {
+            s.acquire();
+            s.release();
+            s.wait();
+            s.acquire();
+            s.release();
 
-		} catch (InterruptedException ex) {
-		}
-	}
+        } catch (InterruptedException ex) {
+        }
+    }
 
-	public void Semaphore_(Semaphore s) {
-		// Semaphore s = new Semaphore(1, true);
-		try {
-			s.acquire();
+    public void Semaphore_(Semaphore s) {
+        // Semaphore s = new Semaphore(1, true);
+        try {
+            s.acquire();
 
-			// wake up waiting thrds
-			s.notify();
+            // wake up waiting thrds
+            s.notify();
 
-			s.release();
+            s.release();
 
-		} catch (InterruptedException ex) {
-		}
-	}
+        } catch (InterruptedException ex) {
+        }
+    }
 
-	public void useThr() {
-		// Can be used for thread safe operations without synchronized
-		// ArrayBlockingQueue abq = new ArrayBlockingQueue(10);
-		SortedSet<Integer> sortedSet = null;
-		// sortedSet.add(1);
+    public void useThr() {
+        // Can be used for thread safe operations without synchronized
+        // ArrayBlockingQueue abq = new ArrayBlockingQueue(10);
+        SortedSet<Integer> sortedSet = null;
+        // sortedSet.add(1);
 
-		List<Integer> list = new ArrayList<Integer>();
+        List<Integer> list = new ArrayList<Integer>();
 		list.add(1);
 		list.add(2);
 		list.add(3);

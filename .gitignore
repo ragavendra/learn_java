@@ -23,3 +23,5 @@
 hs_err_pid*
 replay_pid*
 tags
+.java_
+Compare.java_ Person.java_

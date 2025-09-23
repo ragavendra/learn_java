@@ -1,32 +1,40 @@
 
 package learnJava;
 
-public class Person{
-	private String firstName;
-
-	private String lastName;
-
-	public Person(String fir, String las){
-		firstName = fir;
-		lastName = las;
+public record Person(String firstName, String lastName){
+	public String toString(){
+		return firstName + " " + lastName;
 	}
+};
 
-	public String getFirstName() {
-		return firstName;
-	}
+/* 
+   public class Perso{
+   private String firstName;
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+   private String lastName;
 
-	public String getLastName() {
-		return lastName;
-	}
+   public Perso(String fir, String las){
+   firstName = fir;
+   lastName = las;
+   }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+   public String getFirstName() {
+   return firstName;
+   }
 
-}
+   public void setFirstName(String firstName) {
+   this.firstName = firstName;
+   }
+
+   public String getLastName() {
+   return lastName;
+   }
+
+   public void setLastName(String lastName) {
+   this.lastName = lastName;
+   }
+
+   }
+   */
 
 
