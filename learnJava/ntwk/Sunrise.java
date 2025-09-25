@@ -1,5 +1,6 @@
 package ntwk;
 import java.net.*;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -43,7 +44,8 @@ public class Sunrise {
 		if (isWindows) {
 			builder.command("cmd.exe", "/c", "dir");
 		} else {
-			builder.command("sh", "-c", "ls");
+			// builder.command("sh", "-c", "ls");
+			builder.command("mpv", "/run/media/scion/PART2/songs/Kannada/NammooraMandhara/HELE_KOGILE_IMPAGALA.mp3");
 		}
 		builder.directory(new File(System.getProperty("user.home")));
 		Process process = builder.start();
@@ -54,10 +56,10 @@ public class Sunrise {
 
 		int exitCode = process.waitFor();
 		future.get(10, TimeUnit.SECONDS);
+		executorService.shutdown();
 		if(exitCode == 0){
 			return true;
 		}
-
 		return false;
 		// assertDoesNotThrow(() -> future.get(10, TimeUnit.SECONDS));
 		// assertEquals(0, exitCode); 
@@ -74,19 +76,88 @@ public class Sunrise {
 
 		   String strTorev = URLEncoder.encode(ags[1], "UTF-8");
 		   */
-		String jsonR = GetSunrise();
-		boolean resp = CheckIfItsTime(jsonR);
+		// ntwk call
+		// String jsonR = GetSunrise();
+		String jsonR = "{\"tzid\":\"America/Vancouver\",\"results\":{\"sunrise\":\"5:54:36 AM\",\"solar_noon\":\"1:04:11 PM\",\"day_length\":\"12:13:10\",\"astronomical_twilight_end\":\"8:56:57 PM\",\"astronomical_twilight_begin\":\"5:11:25 AM\",\"sunset\":\"7:10:46 PM\",\"civil_twilight_end\":\"7:40:52 PM\",\"nautical_twilight_end\":\"8:18:16 PM\",\"civil_twilight_begin\":\"6:27:30 AM\",\"nautical_twilight_begin\":\"5:50:06 AM\"},\"status\":\"OK\"}";
+
+		var res = WhichMuhurtha(strToCal(jsonR));
+		System.out.printf("The Muhurtha is %s seq # %s", res, res.getOrder() );	
+
+		boolean resp = CheckIfItsTime(strToCal(jsonR));
+
 		if(resp)
 			PlayFile();
 	}
 
-	public static boolean CheckIfItsTime(String jsonResp) throws Exception {
-		JSONObject json = new JSONObject(jsonResp);
-		// JSONObject json = new JSONObject("{\"tzid\":\"America/Vancouver\",\"results\":{\"sunrise\":\"6:57:36 AM\",\"solar_noon\":\"1:04:11 PM\",\"day_length\":\"12:13:10\",\"astronomical_twilight_end\":\"8:56:57 PM\",\"astronomical_twilight_begin\":\"5:11:25 AM\",\"sunset\":\"7:10:46 PM\",\"civil_twilight_end\":\"7:40:52 PM\",\"nautical_twilight_end\":\"8:18:16 PM\",\"civil_twilight_begin\":\"6:27:30 AM\",\"nautical_twilight_begin\":\"5:50:06 AM\"},\"status\":\"OK\"}");
+	public enum Muhurtha { RUDRA(0), AHI(1), MITRA(2), PITRA(3), VASU(4), VARAHA(5), VISEDEVA(6), ABHIJHITH(7), SATMUHKI(8), PURHATHA(9),
+		VAHINIVINDHA(10), NAKATHNAKARA(11), VARUNA(12), ARAYMANA(13), BAGA(14), GIRISH(15), AJAPADA(16), AHIRBUDDHI(17), PUSYA(18), ASHWINI(19), YAMA(20), AGNI(21), VIDATHAR(22), KANDA(23), ADITI(24), JEEVAAMRUTHA(25), VISHNU(26), DHYAMADHUTHA(27), BRAHMA(28), SAMUDRA(29), Unknown(111);
+
+		private final Integer order;
+
+		Muhurtha(Integer order){
+			this.order = order;
+		}
+
+		public Integer getOrder(){
+			return order;
+		}
+
+		public Muhurtha getValue(){
+			return this;
+		}
+
+		public static Muhurtha setValue(Integer value){
+			switch(value){
+				case 0: return Muhurtha.RUDRA; case 1: return Muhurtha.AHI; case 2: return Muhurtha.MITRA; case 3: return Muhurtha.PITRA; case 4: return Muhurtha.VASU;
+				case 5: return Muhurtha.VISEDEVA;
+				case 6: return Muhurtha.ABHIJHITH;
+				case 7: return Muhurtha.SATMUHKI;
+				case 8: return Muhurtha.PURHATHA;
+				case 9: return Muhurtha.VAHINIVINDHA;
+				case 10: return Muhurtha.NAKATHNAKARA;
+				case 11: return Muhurtha.VARUNA;
+				case 12: return Muhurtha.ARAYMANA;
+				case 13: return Muhurtha.BAGA;
+				case 14: return Muhurtha.GIRISH;
+				case 15: return Muhurtha.AJAPADA;
+				case 16: return Muhurtha.AHIRBUDDHI;
+				case 17: return Muhurtha.PUSYA;
+				case 18: return Muhurtha.ASHWINI;
+				case 19: return Muhurtha.YAMA;
+				case 20: return Muhurtha.AGNI;
+				case 21: return Muhurtha.VIDATHAR;
+				case 22: return Muhurtha.KANDA;
+				case 23: return Muhurtha.ADITI;
+				case 24: return Muhurtha.JEEVAAMRUTHA;
+				case 25: return Muhurtha.VISHNU;
+				case 26: return Muhurtha.DHYAMADHUTHA;
+				case 27: return Muhurtha.BRAHMA;
+				case 28: return Muhurtha.SAMUDRA;
+				default: return Muhurtha.Unknown;
+			}
+		}
+	}
+
+	public static Muhurtha WhichMuhurtha(Calendar sunrise) throws Exception {
+		var currDt = Calendar.getInstance();
+		long diff = currDt.getTimeInMillis() - sunrise.getTimeInMillis();
+		System.out.printf("diff time is %s\n", diff);
+		int seqNo_ = (int) diff / (1000 * 60 * 60); // time in mins
+													// 30 muhurthas in a day
+		seqNo_ = seqNo_ / 30;
+
+		// System.out.printf("Seq # is %s\n", seqNo_ + 1);
+
+		return Muhurtha.setValue(seqNo_);
+	}
+
+	public static Calendar strToCal(String sunris) throws Exception {
+		JSONObject json = new JSONObject(sunris);
+		// JSONObject json = new JSONObject();
 
 		var res = json.getJSONObject("results");
 		// res.getString("sunrise");
-		System.out.printf("Op is %s\n", res.getString("sunrise"));
+		// System.out.printf("Op is %s\n", res.getString("sunrise"));
 
 		// java.util.Date date = new java.util.Date(res.getString("sunrise"));
 		String[] splTime = res.getString("sunrise").split(" ")[0].split(":");
@@ -94,12 +165,26 @@ public class Sunrise {
 
 		// public Date(int year, int month, int date, int hrs, int min) {
 		var currDt = Calendar.getInstance();
-		java.util.Date date = new java.util.Date(currDt.get(Calendar.YEAR), currDt.get(Calendar.MONTH),currDt.get(Calendar.DATE), Integer.parseInt(splTime[0]),Integer.parseInt(splTime[1]),Integer.parseInt(splTime[2]));
-		// System.out.printf("Parsed date is %s\n", date.toString());
+		java.util.Date sunrise_ = new java.util.Date();
+		sunrise_.setDate(Calendar.DATE);
+		sunrise_.setHours(Integer.parseInt(splTime[0]));
+		sunrise_.setMinutes(Integer.parseInt(splTime[1]));
+		sunrise_.setSeconds(Integer.parseInt(splTime[1]));
 
-		if(date.getHours() == currDt.get(Calendar.HOUR_OF_DAY)){
-			if(date.getMinutes() == currDt.get(Calendar.MINUTE)){
-				System.out.printf("Play file %s\n", res.toString());
+		Calendar sunrise = Calendar.getInstance();
+		sunrise.setTime(sunrise_);
+
+		return sunrise;
+	}
+
+	public static boolean CheckIfItsTime(Calendar sunrise) throws Exception {
+
+		// public Date(int year, int month, int date, int hrs, int min) {
+		var currDt = Calendar.getInstance();
+
+		if(sunrise.get(Calendar.HOUR_OF_DAY) == currDt.get(Calendar.HOUR_OF_DAY)){
+			if(sunrise.get(Calendar.MINUTE) == currDt.get(Calendar.MINUTE)){
+				System.out.printf("Play file %s\n", sunrise.toString());
 				return true;
 			}
 			/* 
@@ -108,13 +193,8 @@ public class Sunrise {
 			   */
 		}
 		return false;
-		/* 
-		   else
-		   System.out.printf("Hours don't match %s.\n", date.getHours());
-		   */
 
-
-		}
+	}
 
 	public static String GetSunrise() throws Exception {
 
