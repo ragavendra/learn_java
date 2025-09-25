@@ -80,22 +80,35 @@ public class Sunrise {
 		// String jsonR = GetSunrise();
 		String jsonR = "{\"tzid\":\"America/Vancouver\",\"results\":{\"sunrise\":\"5:54:36 AM\",\"solar_noon\":\"1:04:11 PM\",\"day_length\":\"12:13:10\",\"astronomical_twilight_end\":\"8:56:57 PM\",\"astronomical_twilight_begin\":\"5:11:25 AM\",\"sunset\":\"7:10:46 PM\",\"civil_twilight_end\":\"7:40:52 PM\",\"nautical_twilight_end\":\"8:18:16 PM\",\"civil_twilight_begin\":\"6:27:30 AM\",\"nautical_twilight_begin\":\"5:50:06 AM\"},\"status\":\"OK\"}";
 
-		var res = WhichMuhurtha(strToCal(jsonR));
-		System.out.printf("The Muhurtha is %s seq # %s", res, res.getOrder() );	
+		Calendar sunrise = strToCal(jsonR);
 
-		boolean resp = CheckIfItsTime(strToCal(jsonR));
+		var res = WhichMuhurtha(sunrise);
+		System.out.printf("The Muhurtha is %s, seq# %s and is auspicious %s", res, res.getOrder() + 1, res.getAuspicious());	
+
+		boolean resp = CheckIfItsTime(sunrise);
 
 		if(resp)
 			PlayFile();
 	}
 
-	public enum Muhurtha { RUDRA(0), AHI(1), MITRA(2), PITRA(3), VASU(4), VARAHA(5), VISEDEVA(6), ABHIJHITH(7), SATMUHKI(8), PURHATHA(9),
-		VAHINIVINDHA(10), NAKATHNAKARA(11), VARUNA(12), ARAYMANA(13), BAGA(14), GIRISH(15), AJAPADA(16), AHIRBUDDHI(17), PUSYA(18), ASHWINI(19), YAMA(20), AGNI(21), VIDATHAR(22), KANDA(23), ADITI(24), JEEVAAMRUTHA(25), VISHNU(26), DHYAMADHUTHA(27), BRAHMA(28), SAMUDRA(29), Unknown(111);
+	public enum Muhurtha { RUDRA(0), AHI(1), MITRA(2), PITRA(3), VASU(4), VARAHA(5), VISEDEVA(6), ABHIJHITH_VIDHI(7), SATMUHKI(8), PURHATHA(9), VAHINI_VINDHA(10), NAKATHNAKARA(11), VARUNA(12), ARAYMANA(13), BAGA(14), GIRISH(15), AJAPADA(16), AHIRBUDDHI(17), PUSYA(18), ASHWINI(19), YAMA(20), AGNI(21), VIDATHAR(22), KANDA(23), ADITI(24), JEEVA_AMRUTHA(25), VISHNU(26), DHYAMADHUTHA(27), BRAHMA(28), SAMUDRA(29), Unknown(111);
 
 		private final Integer order;
+		private final String auspicious;
 
 		Muhurtha(Integer order){
 			this.order = order;
+
+			this.auspicious = getAuspicious();
+		}
+
+		public String getAuspicious(){
+			switch(this.order){
+				case 2, 4, 5, 6, 8, 12, 17, 18, 19, 21, 22, 23, 24, 26, 27, 28, 29: return "true";
+				case 7: return "except on Mon, Wed & Fridays";
+				case 13: return "except on Sundays";
+				default: return "false";
+			}
 		}
 
 		public Integer getOrder(){
@@ -108,31 +121,7 @@ public class Sunrise {
 
 		public static Muhurtha setValue(Integer value){
 			switch(value){
-				case 0: return Muhurtha.RUDRA; case 1: return Muhurtha.AHI; case 2: return Muhurtha.MITRA; case 3: return Muhurtha.PITRA; case 4: return Muhurtha.VASU;
-				case 5: return Muhurtha.VISEDEVA;
-				case 6: return Muhurtha.ABHIJHITH;
-				case 7: return Muhurtha.SATMUHKI;
-				case 8: return Muhurtha.PURHATHA;
-				case 9: return Muhurtha.VAHINIVINDHA;
-				case 10: return Muhurtha.NAKATHNAKARA;
-				case 11: return Muhurtha.VARUNA;
-				case 12: return Muhurtha.ARAYMANA;
-				case 13: return Muhurtha.BAGA;
-				case 14: return Muhurtha.GIRISH;
-				case 15: return Muhurtha.AJAPADA;
-				case 16: return Muhurtha.AHIRBUDDHI;
-				case 17: return Muhurtha.PUSYA;
-				case 18: return Muhurtha.ASHWINI;
-				case 19: return Muhurtha.YAMA;
-				case 20: return Muhurtha.AGNI;
-				case 21: return Muhurtha.VIDATHAR;
-				case 22: return Muhurtha.KANDA;
-				case 23: return Muhurtha.ADITI;
-				case 24: return Muhurtha.JEEVAAMRUTHA;
-				case 25: return Muhurtha.VISHNU;
-				case 26: return Muhurtha.DHYAMADHUTHA;
-				case 27: return Muhurtha.BRAHMA;
-				case 28: return Muhurtha.SAMUDRA;
+				case 0: return Muhurtha.RUDRA; case 1: return Muhurtha.AHI; case 2: return Muhurtha.MITRA; case 3: return Muhurtha.PITRA; case 4: return Muhurtha.VASU; case 5: return Muhurtha.VISEDEVA; case 6: return Muhurtha.ABHIJHITH_VIDHI; case 7: return Muhurtha.SATMUHKI; case 8: return Muhurtha.PURHATHA; case 9: return Muhurtha.VAHINI_VINDHA; case 10: return Muhurtha.NAKATHNAKARA; case 11: return Muhurtha.VARUNA; case 12: return Muhurtha.ARAYMANA; case 13: return Muhurtha.BAGA; case 14: return Muhurtha.GIRISH; case 15: return Muhurtha.AJAPADA; case 16: return Muhurtha.AHIRBUDDHI; case 17: return Muhurtha.PUSYA; case 18: return Muhurtha.ASHWINI; case 19: return Muhurtha.YAMA; case 20: return Muhurtha.AGNI; case 21: return Muhurtha.VIDATHAR; case 22: return Muhurtha.KANDA; case 23: return Muhurtha.ADITI; case 24: return Muhurtha.JEEVA_AMRUTHA; case 25: return Muhurtha.VISHNU; case 26: return Muhurtha.DHYAMADHUTHA; case 27: return Muhurtha.BRAHMA; case 28: return Muhurtha.SAMUDRA;
 				default: return Muhurtha.Unknown;
 			}
 		}
@@ -141,9 +130,10 @@ public class Sunrise {
 	public static Muhurtha WhichMuhurtha(Calendar sunrise) throws Exception {
 		var currDt = Calendar.getInstance();
 		long diff = currDt.getTimeInMillis() - sunrise.getTimeInMillis();
-		System.out.printf("diff time is %s\n", diff);
-		int seqNo_ = (int) diff / (1000 * 60 * 60); // time in mins
-													// 30 muhurthas in a day
+		int seqNo_ = (int) diff / (1000 * 60 ); // time in 1000ms and 60 secs
+												// System.out.printf("diff time is %s\n", seqNo_);
+
+												// 30 muhurthas in a day
 		seqNo_ = seqNo_ / 30;
 
 		// System.out.printf("Seq # is %s\n", seqNo_ + 1);
@@ -164,18 +154,24 @@ public class Sunrise {
 		// System.out.printf("Split time is %s\n", splTime[1]);
 
 		// public Date(int year, int month, int date, int hrs, int min) {
-		var currDt = Calendar.getInstance();
-		java.util.Date sunrise_ = new java.util.Date();
-		sunrise_.setDate(Calendar.DATE);
-		sunrise_.setHours(Integer.parseInt(splTime[0]));
-		sunrise_.setMinutes(Integer.parseInt(splTime[1]));
-		sunrise_.setSeconds(Integer.parseInt(splTime[1]));
+		/* 
+		   var currDt = Calendar.getInstance();
+		   java.util.Date sunrise_ = new java.util.Date();
+		   sunrise_.setDate(Calendar.DATE);
+		   sunrise_.setHours(Integer.parseInt(splTime[0]));
+		   sunrise_.setMinutes(Integer.parseInt(splTime[1]));
+		   sunrise_.setSeconds(Integer.parseInt(splTime[1]));
+		   */
 
 		Calendar sunrise = Calendar.getInstance();
-		sunrise.setTime(sunrise_);
+		sunrise.set(Calendar.HOUR_OF_DAY, Integer.parseInt(splTime[0]));
+		sunrise.set(Calendar.MINUTE, Integer.parseInt(splTime[1]));
+		sunrise.set(Calendar.SECOND, Integer.parseInt(splTime[2]));
+		// sunrise.setTime(sunrise_);
+		System.out.printf("Sunrise is %s\n", sunrise.getTime());
 
 		return sunrise;
-	}
+		}
 
 	public static boolean CheckIfItsTime(Calendar sunrise) throws Exception {
 
@@ -194,7 +190,7 @@ public class Sunrise {
 		}
 		return false;
 
-	}
+		}
 
 	public static String GetSunrise() throws Exception {
 
