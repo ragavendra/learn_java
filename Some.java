@@ -55,6 +55,13 @@ public class Some
         eles.add("123123");
 
         eles.forEach(n -> { System.out.println(n); });
+		/* 
+		eles.forEach(new Consumer<String>(){
+			void accept(String it){
+				System.out.println(n);
+			}
+		});
+		*/
         // var itr = eles.iterator();
         // itr.next();
 

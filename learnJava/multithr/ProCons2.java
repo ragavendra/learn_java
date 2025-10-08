@@ -74,7 +74,9 @@ class ProCons {
                     lock.wait();
                 }
 
-                list.add(r.nextInt());
+				int no = r.nextInt(); 
+                list.add(no);
+                System.out.printf("Added item %s\n", no);
                 lock.notify();
             }
         }
@@ -87,10 +89,10 @@ class ProCons {
                 while (list.size() == 0) {
                     lock.wait();
                 }
-                System.out.print("; Removed item " + list.remove(0));
-				String.format("%d is %3.1f", 3, 33.242);
-				System.out.printf("%d is %3.1f", 3, 33.242);
-				String.format("No is {list.remove(3)}");
+                System.out.printf("Removed item %s\n", list.remove(0));
+				// String.format("%d is %3.1f", 3, 33.242);
+				// System.out.printf("%d is %3.1f\n", 3, 33.242);
+				// String.format("No is {list.remove(3)}");
                 lock.notify();
             }
 

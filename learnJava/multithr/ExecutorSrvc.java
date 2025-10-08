@@ -26,7 +26,25 @@ class ExecutorSrvc implements Runnable {
 		es.submit(new ExecutorSrvc());
 		es.submit(new ExecutorSrvc());
 
-		// es.execute((new Thread()));
+		es.execute(new Runnable(){
+			public void run(){
+				System.out.println("Running runnable now");
+				try {
+					sleep(2000);
+				} catch (InterruptedException ex) {
+				}
+			}
+		});
+
+		es.execute(new Thread(){
+			public void run(){
+				System.out.println("Running thr now");
+				try {
+					sleep(2000);
+				} catch (InterruptedException ex) {
+				}
+			}
+		});
 
 		// close and stop accepting new threads but existing threads will be
 		// let to run till compltion

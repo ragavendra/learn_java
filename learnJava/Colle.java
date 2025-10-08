@@ -23,7 +23,7 @@ public class Colle {
 		}
 	}
 
-	public void Sets() {
+	public static void main (String[] args) {
 		var set = new HashSet();
 		set.add("one");
 		set.add("two");

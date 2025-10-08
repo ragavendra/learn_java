@@ -2,7 +2,7 @@ package jyotishaastra;
 import java.util.Arrays;
 import java.util.Calendar;
 
-import jyotishaastra.Ayanamasa;
+import jyotishaastra.Ayanamsha;
 
 public class DegMinSec {
 
@@ -97,39 +97,47 @@ public class DegMinSec {
 		return getGeoCoordsFromDegree(res);
 	}
 
+	public static void main(String ags[]) throws Exception {
+		// Thithi = Chandra - Soorya Sayaana or Nirayaana
+		// ar1 and ar3 are Chandra & Soorya'a Sayaana
+		int Soorya[] = { 22, 39, 28 };
+		int Chandra[] = { 17, 41, 0 };
+		System.out.printf("Tithi is %s.\n", Ayanamsha.tithi(Soorya, Chandra));	
+	}
+
 	/* 
-	   javac jyotishaastra/Ayanamasa.java
+	   javac jyotishaastra/Ayanamsha.java
 	   java jyotishaastra/DegMinSec.java
 	   */
-	public static void main(String ags[]) throws Exception {
-		// India Ephemersis doesnt have Ayanamasa
+	public static void mainNirDaily(String ags[]) throws Exception {
+		// India Ephemersis doesnt have Ayanamsha
 		Calendar date = Calendar.getInstance();
 		date.set(2009, 7, 15); // for 15 July 2009
-		double ayanamasa = Ayanamasa.calculate(date);
-		System.out.printf("Aya is %s degrees\n", ayanamasa);	
+		double ayanamsha = Ayanamsha.ayanamsha(date);
+		System.out.printf("Aya is %s degrees\n", ayanamsha);	
 
 		// Get Nirayaana for Sun
 		// On 15 July 2009
 		int swissEphermesisSun[] = { 22, 39, 28 };
 
 		// On 1 July 2009, Sun is in Karkataka raashi, which is 30 * 3 + 
-		System.out.println("Sun niraayana on 15 July 2009 from Swiss is " + Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Ayanamasa.nirayaana(4, ayanamasa, swissEphermesisSun))));	
+		System.out.println("Soorya niraayana on 15 July 2009 from Swiss is " + Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Ayanamsha.nirayaana(4, ayanamsha, swissEphermesisSun))));	
 
 		// Get Nirayaana for Moon
 		// On 15 July 2009
 		int swissEphermesisMoon[] = { 17, 41, 00 };
 
 		// On 1 July 2009, Sun is in Mesha raashi, which is 30 * 3 + 
-		System.out.println("Moon niraayana on 15 July 2009 from Swiss is " + Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Ayanamasa.nirayaana(1, ayanamasa, swissEphermesisMoon))));	
+		System.out.println("Chandra niraayana on 15 July 2009 from Swiss is " + Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Ayanamsha.nirayaana(1, ayanamsha, swissEphermesisMoon))));	
 
 		// Daily motion of Chandra on 16 - 15 July; 17Mesha41 - 00Vrushaba50
 		int ar1[] = { 17, 41, 0 };
 		int ar2[] = { 00, 50, 0 };
-		ar1[0] = Ayanamasa.absGeo(1, ar1);
-		ar2[0] = Ayanamasa.absGeo(2, ar2);
+		ar1[0] = Ayanamsha.absGeo(1, ar1);
+		ar2[0] = Ayanamsha.absGeo(2, ar2);
 		System.out.printf("Daily motion of Chandra is %s\n", Arrays.toString(DegMinSec.minus(ar1, ar2)));	
 
-		// Daily motion of Soorya 
+		// Daily motion of Soorya, both in Karkataka
 		int ar3[] = { 22, 39, 28 };
 		int ar4[] = { 23, 36, 42 };
 		System.out.printf("Daily motion of Soorya is %s\n", Arrays.toString(DegMinSec.minus(ar3, ar4)));	

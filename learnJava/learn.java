@@ -1,6 +1,11 @@
 package learnJava;
 
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import static java.lang.Thread.sleep;
 import java.nio.file.*;
 import java.util.ArrayList;
@@ -51,7 +56,17 @@ import javax.swing.text.html.HTMLDocument;
 // Online Java Compiler
 // Use this editor to write, compile and run your Java code online
 
+public class ClassName{
+	private String propName = "";
+
+	public String getPropName(){
+		return  propName;
+	}
+}
+
 class Main {
+
+    private static Integer sequence = 0;
 		public static void main(String[] args) {
 		var per1i = new Person("Fir1", "Las1");
 		var cmp = new Compare();
@@ -130,10 +145,11 @@ class Main {
 		// ArraySum(input, ind);
 		System.out.println("Result is " + ArraySum(input, ind));
 
-		var someArr = Arrays.asList(2, 4, 6, 8);
+		// if ind arr changes, someArr will change as well like C pointers
+		// var someArr = Arrays.asList(2, 4, 6, 8);
+		var someArr = Arrays.asList(ind);
 		someArr.forEach(ele -> System.out.println("Ele is " + ele.toString()));
 		var somArr = Arrays.asList(new double[]{2.4334, 4.4324}, new double[]{3.3334, 2.0324}, new double[]{4.3334, 2.9324});
-
 
 		BiConsumer<Double, Double> op =  ((p1, p2) -> System.out.printf("Item is lat %.3f lon %.3f\n",p1, p2));
 
@@ -152,13 +168,16 @@ class Main {
 
 		// func func interf
 		someLis.replaceAll(it -> it.charAt(0) + " - " + it);
+		// UnaryOperator u;
+
 		someLis.forEach(it -> System.out.println("Item is " + it));
 
 		var emptyStrs = new String[10];
 		Arrays.fill(emptyStrs, "");
 
 		// intfunc func interf is used
-		Arrays.setAll(emptyStrs, i -> i++ + ". " + switch(i) { case 0 -> "one"; case 2 -> "two"; default -> "";});
+		// Arrays.setAll(emptyStrs, i -> i++ + ". " + switch(i) { case 0 -> "one"; case 2 -> "two"; default -> "";});
+		Arrays.setAll(emptyStrs, i -> altStr(i));
 		System.out.println(Arrays.toString(emptyStrs));
 		String[] names = {"mesha", "vrushaba", "mithuna", "karkataka", "simha", "kanya", "thula", "vrishika", "dhanusu", "makara", "kumbha", "meena"};
 
@@ -185,29 +204,95 @@ class Main {
 		// all methods in an interf w/o a body is an abstract method
 
 		// streams
-		var str1 = someLis.stream().
+		Stream<String> str1 = someLis.stream().
+
+		// stream pipelin .map.sorted .....
 		filter(ele -> ele.contains("t"))
 		.map(String::toLowerCase)
 		.sorted(Comparator.reverseOrder());
+		// terminal operation forEach doesn't return Stream; intermediate operation identified by returning Stream
+		// evalution first, no change until term operation has started/ exists
+		// unlike chanining the op happens in sequence there
+		// inter oper must be related like not incr no on a str list
 		// .forEach(System.out::println);
 
+		// Stream.of(emptyInts);
 		var str3 = Stream.of("one", "two", "three");
 		var str4 = Stream.of(2, 3, 5.5);
 
-		// preserves natural order
-		LinkedHashMap<Integer, String> linkedHashMap = new LinkedHashMap<>();
-		linkedHashMap.put(3, "");
+		Comparator.comparing(ClassName::getPropName).thenComparing(ClassName::getPropName);
 
-		// sorts by keys
-		TreeMap<String, String> treeMap = new TreeMap<>();
+		String format = "%s to %d".formatted("args", 3);
+
+		// List.of(emptyStrs).stream().filter(co -> co.startsWith("b"))
+			// .maptoInt();
+
+		// str3.mapToInt()
 
 		var str2 = someLis.stream()
+			// .limit(3)
 		.filter(it -> it.endsWith("a"))
 		.map(String::toUpperCase)
 		.sorted(Comparator.naturalOrder());
 
 		Stream.concat(str2, str4).forEach(System.out::println);
+
+		// Stream.generate(() -> rnd.nextInt(2))
+
+		// var stre = IntStream.iterate(1, -);
+		// var strA = 
+		// Stream.generate(() -> 1)
+		 var strA = Stream.iterate(1, i -> i <= 15, b -> b + 1)
+		// .limit(15)
+			// .forEach(System.out::println);
+		.map(it -> "A-" + it);
+			// .forEach(System.out::println);
+
+		var strB = Stream.iterate(16, b -> b + 1)
+		// var strA = Stream.generate(() -> 1)
+		.limit(15)
+		.map(it -> "B-" + it);
+
+		var strC = Stream.iterate(31, b -> b + 1)
+		.limit(15)
+		.map(it -> "C-" + it);
+
+		var strD = Stream.iterate(46, b -> b + 1)
+		.limit(15)
+		.map(it -> "D-" + it);
+
+		// var strE = Stream.iterate(51, b -> b + 1)
+		// .limit(15)
+		// .map(it -> "E-" + it);
+
+		// sequence = 61;
+
+		int seed = 61;
+		// has Side effects has the var state is changed outside of the process
+		var strE = Stream.generate(Main::getSequence)
+		.limit(15)
+		.map(it -> "E-" + (it + seed));
+/*
+		// not recommended
+		var strEe = Stream.generate(() -> rnd.nextInt(seed, seed + 15))
+		.distinct()
+		// .limit(15)
+		.map(it -> "E-" + it)
+		.sorted();
+*/
+
+		// use iterate if you are using the initial value
+		Stream.concat(Stream.concat(Stream.concat(Stream.concat(strA, strB), strC), strD), strE)
+			.forEach((it) -> System.out.printf("%s ", it));
     }
+
+	static Integer getSequence(){
+		return sequence++;
+	}
+
+	static String altStr(Integer i){
+		return i++ + "- " + switch(i) { case 1 -> "one"; case 2 -> "two"; default -> "";};
+	}
 
 	interface SomeInter {
 
@@ -230,44 +315,36 @@ class Main {
 		// abstract enum Some{ one, two, three };
 	}
 
-	class SDFSD {
+	@Retention(RetentionPolicy.RUNTIME)
+	// @Target({ElementType.METHOD})
+	@interface AnnInterf {
+		String name();
+		int no() default 3;
+	}
 
-        static String someVar;
-        ExtSome someCla;
+	@AnnInterf(name = "", no = 3)
+	class ExtSome extends SomeCla{
 
-        void Nobody() {
-            // TODO Auto-generated method stub
-
-        }
-    }
-
-    class ExtSome extends SomeCla {
-
-        static String someVar;
-        ExtSome someCla;
-
+		static String someVar;
+		ExtSome someCla;
         @Override
         void Nobody() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
-    }
+	}
 
-    abstract class SomeCla {
-        // abstract record someRec(int one, String two){};
-        // abstract enum Some{ one, two, three };
+	abstract class SomeCla {
+		// abstract record someRec(int one, String two){};
+		// abstract enum Some{ one, two, three };
+		void SomeMeth(){}
+		abstract void Nobody();
 
-        void SomeMeth() {
-        }
+		// blah (foo [bar 'ba|z'])
+	}
 
-        abstract void Nobody();
-
-        // blah (foo [bar 'ba|z'])
-    }
-
-    // records are final fields and get like rec.lastName()
-    public record SomeRec(String name, String lastName, String email, int id) {
-
-    }
+	// records are final fields and get like rec.lastName()
+	public record SomeRec(String name, String lastName, String email, int id){
+	}
 
 	// supp func interface
     public static String[] randSelNames(int count, String[] ip, Supplier<Integer> s) {
@@ -624,6 +701,7 @@ public class learn {
 			Iterator<String> it = queue.iterator();
 			it.next(); // gives len?
 			it.next(); // gives two?
+			it.remove(); // no add here
 
 			LinkedList list = new LinkedList<String>();
 			list.add("e");
@@ -631,9 +709,15 @@ public class learn {
 			list.add("o");
 			ListIterator<String> listIterator = list.listIterator();
 			listIterator.next();
+			listIterator.add("new"); // add and rem here
+			listIterator.remove();
 
 			// can go back as well
 			listIterator.previous();
+
+			// var sdf = new ImplIter();
+			// ArrayList<String> dfd = sdf.al;
+			// dfd.iterator().next();
 		}
 
 		public void Comparator(){
@@ -656,7 +740,7 @@ public class learn {
 
 		public class ImplIter implements Iterable<String>{
 
-			LinkedList<String> link = new LinkedList();
+			public LinkedList<String> link = new LinkedList();
 
 			class ImplIterat implements Iterator<String>{
 
@@ -719,11 +803,20 @@ public class learn {
 			Funct func = (Integer w) -> w + 1;
 			System.out.println("Func res is " + func.apply(2));
 
-			Pro pro = () -> 2;
-			System.out.println("Pro res is " + pro.get());
+			// Pro pro = () -> 2;
+			// System.out.println("Pro res is " + pro.get());
+
+			Ltd ltd = (long val) -> val * 1.0;
+			ltd.applyAsDouble(6);
+
 
 			// FileOutputStream
 			// ObjectOutputStream
+		}
+
+		interface Ltd extends java.util.function.LongToDoubleFunction {
+
+			double applyAsDouble(long value);
 		}
 
 		interface Cons extends Consumer<Double> {
@@ -748,7 +841,9 @@ public class learn {
 		interface Pro extends Supplier<Integer> {
 
 			@Override
-			Integer get();
+			default Integer get(){
+				return new Random().nextInt();
+			};
 		}
 
 		// functional interface

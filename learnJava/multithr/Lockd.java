@@ -33,14 +33,15 @@ public class Lockd {
                 } catch (InterruptedException ex) {
                     System.out.println("ex " + ex);
                 }
-                System.out.println("no " + no + " ite" + i);
+                System.out.println("no " + no + " iter" + i);
             }
 
         }
     }
 
 // if lock not available at check, it will not run
-    public static void main(int no) {
+    // public static void main(int no) {
+    public static void maini(String[] args) {
 
         for (int i = 0; i < 10; i++) {
 
@@ -49,7 +50,7 @@ public class Lockd {
                 try {
                     // synchronized (lock) {
                     sleep(1000);
-                    System.out.println("no " + no + " ite" + i);
+                    System.out.println("ite " + i);
                     // }
 
                 } catch (InterruptedException ex) {
