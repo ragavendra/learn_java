@@ -25,3 +25,9 @@ replay_pid*
 tags
 .java_
 Compare.java_ Person.java_
+*.java_
+*.classpath_
+*.project_
+*.metadata
+*.settings
+*.idea

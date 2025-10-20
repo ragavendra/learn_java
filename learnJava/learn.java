@@ -39,7 +39,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
+import java.util.function.ToIntFunction;
 import java.util.function.Consumer;
 import java.util.function.DoublePredicate;
 import java.util.function.Function;
@@ -55,14 +57,6 @@ import javax.swing.text.html.HTMLDocument;
 // iw = Greatest sum of sub arrays
 // Online Java Compiler
 // Use this editor to write, compile and run your Java code online
-
-public class ClassName{
-	private String propName = "";
-
-	public String getPropName(){
-		return  propName;
-	}
-}
 
 class Main {
 
@@ -94,6 +88,11 @@ class Main {
 		perLis.add(new Person("Fir2", "Las2"));
 		perLis.sort(cmp);
 		System.out.println("Sorted list is " + perLis);
+
+		BiFunction<Integer, Integer, Integer> biFunc = (p, q) -> p + q;
+		// var biFunc = (p, q) -> p + q;
+		BinaryOperator<Integer> meth = (p, q) -> p + q;
+		System.out.printf("Res of BiFunc %d and BinaryOperator %d", biFunc.apply(4, 3), meth.apply(3, 4));	
 
 		calc((p, q) -> p + q, 3, 4);
 		calc((p, q) -> p + q, "str1 ", "str2");
@@ -220,7 +219,8 @@ class Main {
 		var str3 = Stream.of("one", "two", "three");
 		var str4 = Stream.of(2, 3, 5.5);
 
-		Comparator.comparing(ClassName::getPropName).thenComparing(ClassName::getPropName);
+		// Comparator<ClassName> comp = Comparator.comparing(ClassName::getPropName).thenComparing(ClassName::getPropName);
+		Comparator<ClassName> comp = Comparator.comparing(ClassName::getPropName);
 
 		String format = "%s to %d".formatted("args", 3);
 
@@ -234,23 +234,36 @@ class Main {
 		.filter(it -> it.endsWith("a"))
 		.map(String::toUpperCase)
 		.sorted(Comparator.naturalOrder());
+		// .sorted(comp);
 
 		Stream.concat(str2, str4).forEach(System.out::println);
 
-		// Stream.generate(() -> rnd.nextInt(2))
+		System.out.printf("Stream generate\n");
+		Stream.generate(() -> rnd.nextInt(2))
+			.limit(10)
+			.forEach(System.out::println);
 
-		// var stre = IntStream.iterate(1, -);
+		Stream.generate(() -> "");
+
+		System.out.printf("IntStream generate\n");
+		// only if we know the start no
+		// for loop syntax
+		// IntStream.iterate(3, no -> no + 1)
+		int nm = 33;
+		IntStream.iterate(nm, i -> i < 43, no -> no + 1)
+			.forEachOrdered(System.out::println);
+
 		// var strA = 
 		// Stream.generate(() -> 1)
-		 var strA = Stream.iterate(1, i -> i <= 15, b -> b + 1)
-		// .limit(15)
+		var strA = Stream.iterate(1, i -> i <= 15, b -> b + 1)
+
+			// .limit(15)
 			// .forEach(System.out::println);
-		.map(it -> "A-" + it);
-			// .forEach(System.out::println);
+			.map(it -> "A-" + it);
 
 		var strB = Stream.iterate(16, b -> b + 1)
-		// var strA = Stream.generate(() -> 1)
-		.limit(15)
+			// var strA = Stream.generate(() -> 1)
+			.limit(15)
 		.map(it -> "B-" + it);
 
 		var strC = Stream.iterate(31, b -> b + 1)
@@ -280,298 +293,383 @@ class Main {
 		.map(it -> "E-" + it)
 		.sorted();
 */
+		var strA_ = Stream.of(strA);
 
 		// use iterate if you are using the initial value
 		Stream.concat(Stream.concat(Stream.concat(Stream.concat(strA, strB), strC), strD), strE)
 			.forEach((it) -> System.out.printf("%s ", it));
-    }
 
-	static Integer getSequence(){
-		return sequence++;
-	}
+		class IntFuncExt implements ToIntFunction<String>{
+			public int applyAsInt(String str){
+				return Integer.parseInt(str);
+			}
+		};
 
-	static String altStr(Integer i){
-		return i++ + "- " + switch(i) { case 1 -> "one"; case 2 -> "two"; default -> "";};
-	}
+		var mapToInt = new IntFuncExt();
 
-	interface SomeInter {
+		// mapToInt maps any type Stream to primi int
+		// Stream<Integer> strA_ = 
+			strA_
+			// .mapToInt(mapToInt)
+				// .mapToInt(in -> Integer.parseInt(3))
+				.mapToInt(in -> 3)
+		.forEach(System.out::println);
+/* 
+		// var strA__ = 
+			strA_
+			// .mapToInt(str -> str.length())
+			// .mapToInt(str -> Integer.parseInt(str))
+			// .mapToInt(String::length)
+			.mapToInt(str -> 3)
+			.forEach(System.out::println);
+			; // takes str and returns int
+*/
+			// below affects the size of a stream
+			// distinct(n), filter(pred), takeWhile(pred), skipWhile(pred), dropWhile(pred), limit(n) & skip(n) 
+			// intem operations are map(), peek() and sorted()
+			IntStream.iterate((int) 'A', i -> i <= (int) 'z', i -> i + 1)
+				.filter(Character::isAlphabetic)
+				.map(Character::toUpperCase)
+				// .map(c -> Character.toUpperCase(c))
+				.distinct()
+				//                .dropWhile(i -> Character.toUpperCase(i) <= 'E')
+				//                .takeWhile(i -> i < 'a')
+				//                .skip(5)
+				//                .filter(i -> Character.toUpperCase(i) > 'E')
+				.forEach(d -> System.out.printf("%c ", d));
 
-		public static String someVar = "";
-		// public String someVare;
-		// ExtSome someCla;
+			int maxSeats = 100;
+			int seatsInRow = 10;
+			var stream =
+				Stream.iterate(0, i -> i < maxSeats, i -> i + 1)
+				.map(i -> new Seat((char) ('A' + i / seatsInRow),
+							i % seatsInRow + 1))
+				// .mapToDouble(Seat::price);
+				// .mapToObj("%.2f"::formatted);
+				// .boxed()
+				// .map(new Comparator<String>(){}::toString)
+				.skip(5)
+				.limit(10)
+				.peek(s -> System.out.println("--> " + s)) // for debugging
+				// .boxed() // maps to an object
+				.sorted(Comparator.comparing(Seat::price)
+						.thenComparing(Seat::toString));
+			//                        .mapToDouble(Seat::price)
+			//                        .boxed()
+			//                        .map("%.2f"::formatted);
+			stream.forEach(System.out::println);
+			// var objClass = Object.class;
+		}
 
-		// has to have body
-		private void SomeMeth(){}
+		public record Seat(char rowMarker, int seatNumber, double price) {
 
-		// no body here and is an abstract
-		public void SomeMetho();
+			public Seat(char rowMarker, int seatNumber) {
+				this(rowMarker, seatNumber,
+						rowMarker > 'C' && (seatNumber <= 2 || seatNumber >= 9) ? 50 : 75);
+			}
 
-		// only these can have body
-		public default void SomeMetho(String one){}
-		public default void SomMetho(){}
-		public static void SomeMethod(){}
-		private void SomeMet(){}
-		// abstract record someRec(int one, String two){};
-		// abstract enum Some{ one, two, three };
-	}
+			@Override
+			public String toString() {
+				return "%c%03d %.0f".formatted(rowMarker, seatNumber, price);
+			}
+		}
 
-	@Retention(RetentionPolicy.RUNTIME)
-	// @Target({ElementType.METHOD})
-	@interface AnnInterf {
+		static Integer getSequence(){
+			return sequence++;
+		}
+
+		static String altStr(Integer i){
+			return i++ + "- " + switch(i) { case 1 -> "one"; case 2 -> "two"; default -> "";};
+		}
+
+		// func inter are of Cons, Function, Pred and Supp
+		public static <R> R calc(BinaryOperator<R> meth, R p1, R p2) {
+			R res = meth.apply(p1, p2);
+			System.out.println("Op of operation is " + res);
+			return res;
+		}
+
+		// supp func interface
+		public static String[] randSelNames(int count, String[] ip, Supplier<Integer> s) {
+			String[] selVals = new String[count];
+			for (int i = 0; i < count; i++) {
+				selVals[i] = ip[s.get()];
+			}
+			return selVals;
+		}
+
+		// using custom func interf
+		public static <R> R calce(Operation<R> meth, R p1, R p2) {
+			R res = meth.operate(p1, p2);
+			System.out.println("Op of operation is " + res);
+			return res;
+		}
+
+		public static <S> void accept(BiConsumer<S, S> oper, S val1, S val2) {
+			oper.accept(val1, val2);
+		}
+
+		interface Operation<I> {
+			public I operate(I p1, I p2);
+		}
+
+		interface SomeInter {
+
+			public static String someVar = "";
+			// public String someVare;
+			// ExtSome someCla;
+
+			// has to have body
+			private void SomeMeth(){}
+
+			// no body here and is an abstract
+			public void SomeMetho();
+
+			// only these can have body
+			public default void SomeMetho(String one){}
+			public default void SomMetho(){}
+			public static void SomeMethod(){}
+			private void SomeMet(){}
+			// abstract record someRec(int one, String two){};
+			// abstract enum Some{ one, two, three };
+		}
+
+		@Retention(RetentionPolicy.RUNTIME)
+		// @Target({ElementType.METHOD})
+		@interface AnnInterf {
 		String name();
 		int no() default 3;
+		}
+
+		@AnnInterf(name = "", no = 3)
+		class ExtSome extends SomeCla{
+
+			static String someVar;
+			ExtSome someCla;
+			@Override
+			void Nobody() {
+				throw new UnsupportedOperationException("Not supported yet.");
+			}
+		}
+
+		abstract class SomeCla {
+			// abstract record someRec(int one, String two){};
+			// abstract enum Some{ one, two, three };
+			void SomeMeth(){}
+			abstract void Nobody();
+
+			// blah (foo [bar 'ba|z'])
+		}
+
+		// records are final fields and get like rec.lastName()
+		// used instead of beans meaning class with only data in it
+		public record SomeRec(String name, String lastName, String email, int id){
+			SomeRec(String name, String lastName, String email){
+				this(name, lastName, email, 3);
+			}
+		}
+
+		public static int ArraySum(int[] input, int[] ind) {
+
+			// int[] resSum = new int[ind.size()/2];
+			// ind = {0, 6, 7, 15, 16, 26};
+			int sum = 0;
+			int sumLoop = 0;
+			int st = 0;
+			int end = 0;
+			// int times = ind.length/2;
+
+			// loops no. of sub array times
+			for (int i = 0; i < ind.length; i = i + 2) {
+				st = ind[i];
+				end = ind[i + 1];
+				System.out.println("St " + st);
+				System.out.println("En " + end);
+
+				// loop each sub array
+				for (int y = st; y < end; ++y) {
+					//for(int z = input[y]; z < input[end]; z++) {
+					System.out.println("input[y] " + input[y]);
+
+					sum = sum + input[y];
+					//}
+				}
+
+				System.out.println("Res is " + sum);
+
+				if (sum > sumLoop) {
+					sumLoop = sum;
+				}
+
+				sum = 0;
+
+			}
+
+			return sumLoop;
+		}
+}
+
+class ClassName {
+	private String propName = "";
+
+	public String getPropName(){
+		return  propName;
 	}
-
-	@AnnInterf(name = "", no = 3)
-	class ExtSome extends SomeCla{
-
-		static String someVar;
-		ExtSome someCla;
-        @Override
-        void Nobody() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-	}
-
-	abstract class SomeCla {
-		// abstract record someRec(int one, String two){};
-		// abstract enum Some{ one, two, three };
-		void SomeMeth(){}
-		abstract void Nobody();
-
-		// blah (foo [bar 'ba|z'])
-	}
-
-	// records are final fields and get like rec.lastName()
-	public record SomeRec(String name, String lastName, String email, int id){
-	}
-
-	// supp func interface
-    public static String[] randSelNames(int count, String[] ip, Supplier<Integer> s) {
-        String[] selVals = new String[count];
-        for (int i = 0; i < count; i++) {
-            selVals[i] = ip[s.get()];
-        }
-        return selVals;
-
-    }
-
-    // func inter are of Cons, Function, Pred and Supp
-    public static <R> R calc(BinaryOperator<R> meth, R p1, R p2) {
-        R res = meth.apply(p1, p2);
-        System.out.println("Op of operation is " + res);
-        return res;
-    }
-
-    // using custom func interf
-    public static <R> R calce(Operation<R> meth, R p1, R p2) {
-        R res = meth.operate(p1, p2);
-        System.out.println("Op of operation is " + res);
-        return res;
-    }
-
-    public static <S> void accept(BiConsumer<S, S> oper, S val1, S val2) {
-        oper.accept(val1, val2);
-    }
-
-    interface Operation<I> {
-
-        public I operate(I p1, I p2);
-    }
-
-    public static int ArraySum(int[] input, int[] ind) {
-
-        // int[] resSum = new int[ind.size()/2];
-        // ind = {0, 6, 7, 15, 16, 26};
-        int sum = 0;
-        int sumLoop = 0;
-        int st = 0;
-        int end = 0;
-        // int times = ind.length/2;
-
-        // loops no. of sub array times
-        for (int i = 0; i < ind.length; i = i + 2) {
-            st = ind[i];
-            end = ind[i + 1];
-            System.out.println("St " + st);
-            System.out.println("En " + end);
-
-            // loop each sub array
-            for (int y = st; y < end; ++y) {
-                //for(int z = input[y]; z < input[end]; z++) {
-                System.out.println("input[y] " + input[y]);
-
-                sum = sum + input[y];
-                //}
-            }
-
-            System.out.println("Res is " + sum);
-
-            if (sum > sumLoop) {
-                sumLoop = sum;
-            }
-
-            sum = 0;
-
-        }
-
-        return sumLoop;
-    }
 }
 
 // @FunctionalInterface
 interface FirLasComp<S> extends Comparator<S> {
 
-    public int AnotherComp(S per1, S per2);
+	public int AnotherComp(S per1, S per2);
 }
 
 /* 
-class Compare<Person> implements Comparator<Person> {
+   class Compare<Person> implements Comparator<Person> {
 
-	public int compare(Person arg0, Person arg1) {
-		// getting undef sym err
-		// return arg0.getFirstName().compareTo(arg1.getFirstName());
-		arg0 = new Person("fir", "las");
-		arg0.getFirstName();
-		return 1;
-	}
-}
-class Person{
-	private String firstName;
+   public int compare(Person arg0, Person arg1) {
+// getting undef sym err
+// return arg0.getFirstName().compareTo(arg1.getFirstName());
+arg0 = new Person("fir", "las");
+arg0.getFirstName();
+return 1;
+   }
+   }
+   class Person{
+   private String firstName;
 
-	private String lastName;
+   private String lastName;
 
-	public Person(String fir, String las){
-		firstName = fir;
-		lastName = las;
-	}
+   public Person(String fir, String las){
+   firstName = fir;
+   lastName = las;
+   }
 
-	public String getFirstName() {
-		return firstName;
-	}
+   public String getFirstName() {
+   return firstName;
+   }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+   public void setFirstName(String firstName) {
+   this.firstName = firstName;
+   }
 
-	public String getLastName() {
-		return lastName;
-	}
+   public String getLastName() {
+   return lastName;
+   }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+   public void setLastName(String lastName) {
+   this.lastName = lastName;
+   }
 
-	public String toString(){
-		return firstName + " " + lastName;
-	}
-}
- */
+   public String toString(){
+   return firstName + " " + lastName;
+   }
+   }
+   */
 public class learn {
 
-    public void CopyStream() {
-        List<String> strings = List.of("one", "two", "three", "four");
-        Map<String, String> map = Map.of("key", "val", "2", "val2");
-        Function<String, Integer> toLength = String::length;
-        List<Integer> ints = strings.stream()
-                .map(toLength)
-                .collect(Collectors.toList());
+	public void CopyStream() {
+		List<String> strings = List.of("one", "two", "three", "four");
+		Map<String, String> map = Map.of("key", "val", "2", "val2");
+		Function<String, Integer> toLength = String::length;
+		List<Integer> ints = strings.stream()
+			.map(toLength)
+			.collect(Collectors.toList());
 
-        var ints_ = strings.stream()
-                .mapToInt(String::length)
-                .summaryStatistics();
+		var ints_ = strings.stream()
+			.mapToInt(String::length)
+			.summaryStatistics();
 
-        System.out.println("List is " + ints);
+		System.out.println("List is " + ints);
 
-    }
+	}
 
-    public void CallableFuture() {
-        ExecutorService es = Executors.newCachedThreadPool();
-        Future<?> f = es.submit(new Callable<Void>() {
-            public Void call() {
-                return null;
-            }
-        });
+	public void CallableFuture() {
+		ExecutorService es = Executors.newCachedThreadPool();
+		Future<?> f = es.submit(new Callable<Void>() {
+			public Void call() {
+				return null;
+			}
+		});
 
-        Future<String> fS = es.submit(new Callable<String>() {
-            public String call() {
-                return "";
-            }
-        });
+		Future<String> fS = es.submit(new Callable<String>() {
+			public String call() {
+				return "";
+			}
+		});
 
-        try {
-            f.get();
-            System.err.println("Future Res is " + fS.get());
-        } catch (InterruptedException ex) {
-        } catch (ExecutionException ex) {
-        }
-    }
+		try {
+			f.get();
+			System.err.println("Future Res is " + fS.get());
+		} catch (InterruptedException ex) {
+		} catch (ExecutionException ex) {
+		}
+	}
 
-    public void StreamsMapFilterReduce() {
-        String fil = "/tmp/so", str = "rama";
-        try (var strm = Files.lines(Path.of(fil))) {
-            long count = strm.filter(line -> line.contains(str)).count();
+	public void StreamsMapFilterReduce() {
+		String fil = "/tmp/so", str = "rama";
+		try (var strm = Files.lines(Path.of(fil))) {
+			long count = strm.filter(line -> line.contains(str)).count();
 
-            // var c = strm.takeWhile(bo -> bo.contains('bo'));
-            System.out.println("Found " + count + " of " + str);
-        } catch (IOException ex) {
-            System.err.println("Exception is " + ex.toString());
-        }
+			// var c = strm.takeWhile(bo -> bo.contains('bo'));
+			System.out.println("Found " + count + " of " + str);
+		} catch (IOException ex) {
+			System.err.println("Exception is " + ex.toString());
+		}
 
-        IntStream.range(0, 7)
-                // .forEach(ic -> System.err.println("Ele is " + ic));
-                .takeWhile(no -> no > 2)
-                .forEach(System.out::println);
+		IntStream.range(0, 7)
+			// .forEach(ic -> System.err.println("Ele is " + ic));
+			.takeWhile(no -> no > 2)
+			.forEach(System.out::println);
 
-        // IntStream.iterate(0, 8);
-        List<String> list = List.of("one", "two", "three");
-        list
-                .stream()
-                .filter(pr -> pr.contains("pr"))
-                .forEach(cr -> System.out.println("" + cr));
+		// IntStream.iterate(0, 8);
+		List<String> list = List.of("one", "two", "three");
+		list
+			.stream()
+			.filter(pr -> pr.contains("pr"))
+			.forEach(cr -> System.out.println("" + cr));
 
-        list
-                .stream()
-                // .map(ele -> ele.toUpperCase())
-                .filter(pr -> pr.length() == 3)
-                .map(String::toUpperCase)
-                // .forEach(ele -> System.out.println(ele));
-                .forEach(System.out::println);
-    }
+		list
+			.stream()
+			// .map(ele -> ele.toUpperCase())
+			.filter(pr -> pr.length() == 3)
+			.map(String::toUpperCase)
+			// .forEach(ele -> System.out.println(ele));
+			.forEach(System.out::println);
+	}
 
-    public void Semaphore(Semaphore s) {
-        try {
-            s.acquire();
-            s.release();
-            s.wait();
-            s.acquire();
-            s.release();
+	public void Semaphore(Semaphore s) {
+		try {
+			s.acquire();
+			s.release();
+			s.wait();
+			s.acquire();
+			s.release();
 
-        } catch (InterruptedException ex) {
-        }
-    }
+		} catch (InterruptedException ex) {
+		}
+	}
 
-    public void Semaphore_(Semaphore s) {
-        // Semaphore s = new Semaphore(1, true);
-        try {
-            s.acquire();
+	public void Semaphore_(Semaphore s) {
+		// Semaphore s = new Semaphore(1, true);
+		try {
+			s.acquire();
 
-            // wake up waiting thrds
-            s.notify();
+			// wake up waiting thrds
+			s.notify();
 
-            s.release();
+			s.release();
 
-        } catch (InterruptedException ex) {
-        }
-    }
+		} catch (InterruptedException ex) {
+		}
+	}
 
-    public void useThr() {
-        // Can be used for thread safe operations without synchronized
-        // ArrayBlockingQueue abq = new ArrayBlockingQueue(10);
-        SortedSet<Integer> sortedSet = null;
-        // sortedSet.add(1);
+	public void useThr() {
+		// Can be used for thread safe operations without synchronized
+		// ArrayBlockingQueue abq = new ArrayBlockingQueue(10);
+		SortedSet<Integer> sortedSet = null;
+		// sortedSet.add(1);
 
-        List<Integer> list = new ArrayList<Integer>();
+		List<Integer> list = new ArrayList<Integer>();
 		list.add(1);
 		list.add(2);
 		list.add(3);
@@ -720,7 +818,7 @@ public class learn {
 			// dfd.iterator().next();
 		}
 
-		public void Comparator(){
+		public void Comparator_(){
 
 			ArrayList<String> al = new ArrayList<String>();
 
