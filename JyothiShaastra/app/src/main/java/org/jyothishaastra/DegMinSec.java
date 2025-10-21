@@ -108,43 +108,15 @@ public class DegMinSec {
 		return getGeoCoordsFromDegree(res);
 	}
 
-	public static void main(String ags[]) throws Exception {
-		// Thithi = Chandra - Soorya Sayaana or Nirayaana
-		// ar1 and ar3 are Chandra & Soorya'a Sayaana
-        // For Surya and Chadra on 15 July 2009 using Swiss ephemersis
-		int Soorya[] = { 22, 39, 28 };
-		int Chandra[] = { 17, 41, 0 };
-
-        // Surya is in Karkaataka 4 and Chandra is in Mesha 1 raashi
-		System.out.printf("Tithi is %s and remaining distance is %4.9f.\n", Ayanamsha.tithi(Soorya, Chandra, 4, 1), Ayanamsha.remainingDistance);
-
-		// Daily motion of Chandra on 16 - 15 July; 17Mesha41 - 00Vrushaba50
-		int ar1[] = { 17, 41, 0 };
-		int ar2[] = { 00, 50, 0 };
-		ar1[0] = Ayanamsha.absGeo(1, ar1);
-		ar2[0] = Ayanamsha.absGeo(2, ar2);
-        int chaMot[] = DegMinSec.minus(ar1, ar2);
-		System.out.printf("Daily motion of Chandra is %s\n", Arrays.toString(chaMot));
-
-		// Daily motion of Soorya, both in Karkataka
-		int ar3[] = { 22, 39, 28 };
-		int ar4[] = { 23, 36, 42 };
-        int surMot[] = DegMinSec.minus(ar3, ar4);
-		System.out.printf("Daily motion of Soorya is %s\n", Arrays.toString(surMot));
-
-        // Time taken to cover remainingDistance
-        System.out.printf("Tithi ends at %s from 5:30 IST .\n", Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Ayanamsha.tithiEnd(surMot, chaMot, Ayanamsha.remainingDistance))));
-
-	}
-
 	/* 
 	   javac jyotishaastra/Ayanamsha.java
 	   java jyotishaastra/DegMinSec.java
 	   */
-	public static void maini(String ags[]) throws Exception {
+	public static void main(String ags[]) throws Exception {
+
 		// India Ephemersis doesnt have Ayanamsha
 		Calendar date = Calendar.getInstance();
-		date.set(2009, 7, 15); // for 15 July 2009
+		// date.set(2009, 7, 15); // for 15 July 2009
 		double ayanamsha = Ayanamsha.ayanamsha(date);
 		System.out.printf("Aya is %s degrees\n", ayanamsha);	
 
@@ -153,15 +125,50 @@ public class DegMinSec {
 		int swissEphermesisSun[] = { 22, 39, 28 };
 
 		// On 1 July 2009, Sun is in Karkataka raashi, which is 30 * 3 + 
-		System.out.println("Soorya niraayana on 15 July 2009 from Swiss is " + Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Ayanamsha.nirayaana(4, ayanamsha, swissEphermesisSun))));	
+		int surNir[] = DegMinSec.getGeoCoordsFromDegree(Ayanamsha.nirayaana(4, ayanamsha, swissEphermesisSun));
+
+		System.out.printf("Soorya niraayana on %s from Swiss is %s\n", date.getTime(), Arrays.toString(surNir));	
 
 		// Get Nirayaana for Moon
 		// On 15 July 2009
 		int swissEphermesisMoon[] = { 17, 41, 00 };
 
 		// On 1 July 2009, Sun is in Mesha raashi, which is 30 * 3 + 
-		System.out.println("Chandra niraayana on 15 July 2009 from Swiss is " + Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Ayanamsha.nirayaana(1, ayanamsha, swissEphermesisMoon))));	
-    }
+		int[] chaNir = DegMinSec.getGeoCoordsFromDegree(Ayanamsha.nirayaana(1, ayanamsha, swissEphermesisMoon));
+		System.out.printf("Chandra niraayana on %s from Swiss is %s\n", date.getTime(), Arrays.toString(chaNir));	
+
+		// Thithi = Chandra - Soorya Sayaana or Nirayaana
+		// ar1 and ar3 are Chandra & Soorya'a Sayaana
+        // For Surya and Chadra on 15 July 2009 using Swiss ephemersis
+		int Soorya[] = { 22, 39, 28 };
+		int Chandra[] = { 17, 41, 0 };
+
+        // Surya is in Karkaataka 4 and Chandra is in Mesha 1 raashi
+		// System.out.printf("Tithi is %s and remaining distance is %4.9f.\n", Ayanamsha.tithi(Soorya, Chandra, 4, 1), Ayanamsha.remainingDistance);
+		System.out.printf("Tithi is %s and remaining distance is %4.9f.\n", Tithi.tithi(Soorya, Chandra, 8, 8), Tithi.remainingDistance);
+
+		// Daily motion of Chandra on 16 - 15 July; 17Mesha41 - 00Vrushaba50
+		// int ar1[] = { 17, 41, 0 };
+		// int ar2[] = { 00, 50, 0 };
+		int ar1[] = { 22, 10, 0 };
+		int ar2[] = { 04, 7, 0 };
+		ar1[0] = Ayanamsha.absGeo(1, ar1);
+		ar2[0] = Ayanamsha.absGeo(2, ar2);
+        int chaMot[] = DegMinSec.minus(ar1, ar2);
+		System.out.printf("Daily motion of Chandra is %s\n", Arrays.toString(chaMot));
+
+		// Daily motion of Soorya, both in Karkataka
+		// int ar3[] = { 22, 39, 28 };
+		// int ar4[] = { 23, 36, 42 };
+		int ar3[] = { 26, 51, 0 };
+		int ar4[] = { 28, 50, 42 };
+        int surMot[] = DegMinSec.minus(ar3, ar4);
+		System.out.printf("Daily motion of Soorya is %s\n", Arrays.toString(surMot));
+
+        // Time taken to cover remainingDistance
+        System.out.printf("Tithi ends at %s from 5:30 IST .\n", Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Tithi.tithiEnd(surMot, chaMot, Tithi.remainingDistance))));
+
+	}
 
 	public static void mainThisClass(String ags[]) throws Exception {
 		/* 
