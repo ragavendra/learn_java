@@ -29,6 +29,18 @@ public class Ayanamsha {
 		return niraGraha;
 	}
 
+	// Mesha is Raashi 1
+	public static double nirayaana(double ayanamsha, int[] grahaAbsGeo) throws Exception {
+
+		// add 360 if less than ayanamsha
+		if(DegMinSec.degrees(grahaAbsGeo) < ayanamsha)
+			grahaAbsGeo[0] = grahaAbsGeo[0] + 360;
+
+		// System.out.println("Deg is " + DegMinSec.degrees(grahaGeo));
+		double niraGraha = DegMinSec.degrees(grahaAbsGeo) - ayanamsha;
+		return niraGraha;
+	}
+
 	public static double durationHours(Calendar cal, int rashi, int[] grahaGeo) throws Exception {
 		return nirayaana(rashi, ayanamsha(cal), grahaGeo);	
 	}
