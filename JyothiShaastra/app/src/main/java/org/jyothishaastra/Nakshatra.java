@@ -2,8 +2,6 @@ package org.jyothishaastra;
 
 import java.util.Calendar;
 
-// import jyothishaastra.DegMinSec;
-
 public class Nakshatra {
 	static String nakshatras[] = { "Ashwini", "Bharani", "Krithika", "Rohini", "Mrigashira", "Aradra", "Punarvasu", "Pushya", "Ashlesha", "Magha", "Pubha", "Uttara", "Hashta", "Chitta", "Swathi", "Vishakha", "Anuradha", "Jyeshta", "Moola", "Purvashaada", "Uttarashaada", "Shravana", "Dhanishta", "Shathabisha", "Poorvabadha", "Uttarabadha", "Revathi" };
 

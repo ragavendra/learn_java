@@ -2,8 +2,6 @@ package org.jyothishaastra;
 
 import java.util.Calendar;
 
-// import jyothishaastra.DegMinSec;
-
 public class Raashi {
 	static String rashis[] = { "Mesha", "Vrushabha", "Mithuna", "Karkataka", "Simha", "Kanya", "Thula", "Vrishika", "Mesha", "Kumbha", "Meena" };
 

@@ -2,8 +2,6 @@ package org.jyothishaastra;
 import java.util.Arrays;
 import java.util.Calendar;
 
-// import jyothishaastra.Ayanamsha;
-
 public class DegMinSec {
 
 /* 
@@ -108,6 +106,10 @@ public class DegMinSec {
 		return getGeoCoordsFromDegree(res);
 	}
 
+	public static int absGeo(int raashi, int[] grahaGeo) throws Exception {
+		return (grahaGeo[0] + 30 * ( raashi - 1));
+	}
+
 	/* 
 	   javac jyotishaastra/Ayanamsha.java
 	   java jyotishaastra/DegMinSec.java
@@ -122,47 +124,50 @@ public class DegMinSec {
 
 		// Get Nirayaana for Sun
 		// On 15 July 2009
-		int swissEphermesisSun[] = { 22, 39, 28 };
+		// int swissEphermesisSun[] = { 22, 39, 28 };
+		int swissEphermesisSun[] = { 27, 51, 00 };
 
 		// On 1 July 2009, Sun is in Karkataka raashi, which is 30 * 3 + 
-		int surNir[] = DegMinSec.getGeoCoordsFromDegree(Ayanamsha.nirayaana(4, ayanamsha, swissEphermesisSun));
+		int surRaashi = 8;
+		int chaRaashi = 8;
+		int surNir[] = DegMinSec.getGeoCoordsFromDegree(Ayanamsha.nirayaana(surRaashi, ayanamsha, swissEphermesisSun));
 
 		System.out.printf("Soorya niraayana on %s from Swiss is %s\n", date.getTime(), Arrays.toString(surNir));	
 
 		// Get Nirayaana for Moon
 		// On 15 July 2009
-		int swissEphermesisMoon[] = { 17, 41, 00 };
+		int swissEphermesisMoon[] = { 22, 10, 00 };
 
 		// On 1 July 2009, Sun is in Mesha raashi, which is 30 * 3 + 
-		int[] chaNir = DegMinSec.getGeoCoordsFromDegree(Ayanamsha.nirayaana(1, ayanamsha, swissEphermesisMoon));
+		int[] chaNir = DegMinSec.getGeoCoordsFromDegree(Ayanamsha.nirayaana(chaRaashi, ayanamsha, swissEphermesisMoon));
 		System.out.printf("Chandra niraayana on %s from Swiss is %s\n", date.getTime(), Arrays.toString(chaNir));	
 
 		// Thithi = Chandra - Soorya Sayaana or Nirayaana
 		// ar1 and ar3 are Chandra & Soorya'a Sayaana
         // For Surya and Chadra on 15 July 2009 using Swiss ephemersis
-		int Soorya[] = { 22, 39, 28 };
-		int Chandra[] = { 17, 41, 0 };
+		// int Soorya[] = { 22, 39, 28 };
+		// int Chandra[] = { 17, 41, 0 };
 
         // Surya is in Karkaataka 4 and Chandra is in Mesha 1 raashi
 		// System.out.printf("Tithi is %s and remaining distance is %4.9f.\n", Ayanamsha.tithi(Soorya, Chandra, 4, 1), Ayanamsha.remainingDistance);
-		System.out.printf("Tithi is %s and remaining distance is %4.9f.\n", Tithi.tithi(Soorya, Chandra, 8, 8), Tithi.remainingDistance);
+		System.out.printf("Tithi is %s and remaining distance is %4.9f.\n", Tithi.tithi(swissEphermesisSun, swissEphermesisMoon, surRaashi, chaRaashi), Tithi.remainingDistance);
 
 		// Daily motion of Chandra on 16 - 15 July; 17Mesha41 - 00Vrushaba50
 		// int ar1[] = { 17, 41, 0 };
 		// int ar2[] = { 00, 50, 0 };
-		int ar1[] = { 22, 10, 0 };
-		int ar2[] = { 04, 7, 0 };
-		ar1[0] = Ayanamsha.absGeo(1, ar1);
-		ar2[0] = Ayanamsha.absGeo(2, ar2);
-        int chaMot[] = DegMinSec.minus(ar1, ar2);
+		// int ar1[] = { 22, 10, 0 };
+		int ar2[] = { 04, 7, 0 }; // of next day's
+		swissEphermesisMoon[0] = DegMinSec.absGeo(1, swissEphermesisMoon);
+		ar2[0] = DegMinSec.absGeo(2, ar2);
+        int chaMot[] = DegMinSec.minus(swissEphermesisMoon, ar2);
 		System.out.printf("Daily motion of Chandra is %s\n", Arrays.toString(chaMot));
 
 		// Daily motion of Soorya, both in Karkataka
 		// int ar3[] = { 22, 39, 28 };
 		// int ar4[] = { 23, 36, 42 };
-		int ar3[] = { 26, 51, 0 };
+		// int ar3[] = { 27, 51, 0 };
 		int ar4[] = { 28, 50, 42 };
-        int surMot[] = DegMinSec.minus(ar3, ar4);
+        int surMot[] = DegMinSec.minus(swissEphermesisSun, ar4);
 		System.out.printf("Daily motion of Soorya is %s\n", Arrays.toString(surMot));
 
         // Time taken to cover remainingDistance
