@@ -25,8 +25,10 @@ public class DegMinSec {
 	public static double toDegrees(int degree, int minutes, int seconds){
         int abs = Math.abs(degree);
 
-        if(degree == 0)
+        if(degree == 0) {
+			// System.out.println("deg is 0");
             degree = 1;
+		}
 
 		return Math.signum(degree) * (abs + (minutes / 60.0) + (seconds / 3600.0));
 	}
@@ -90,9 +92,13 @@ public class DegMinSec {
 	}
 
 	public static int[] minus(int dms1[], int dms2[]) {
+		// System.out.println("dms1 is " + Arrays.toString(dms1));	
+		// System.out.println("dms2 is " + Arrays.toString(dms2));	
 		double d1 = toDegrees(dms1);
 		double d2 = toDegrees(dms2);
 
+		// System.out.println("d1 is " + d1);	
+		// System.out.println("d2 is " + d2);	
 		// swap
 		if(d1 > d2){
 			double d = d2;
@@ -120,7 +126,9 @@ public class DegMinSec {
 		Calendar date = Calendar.getInstance();
 		// date.set(2009, 7, 15); // for 15 July 2009
 		double ayanamsha = Ayanamsha.ayanamsha(date);
-		System.out.printf("Aya is %s degrees\n", ayanamsha);	
+		// System.out.printf("Aya is %s degrees\n", ayanamsha);	
+		// System.out.printf("Aya is %s degrees\n", Arrays.toString(DegMinSec.getGeoCoordsFromDegree(ayanamsha)));	
+		ayanamsha = 23.9928962;
 
 		// Mesha is 1
 		/*
@@ -139,10 +147,10 @@ public class DegMinSec {
 		int surRaashi = 4; // Karkaataka
 		int chaRaashi = 1; // Mesha
 		int swissEphermesisMoon[] = { 17, 41, 00 };
-		int ar1[] = swissEphermesisMoon; // of next day's which is in Mesha raashi 9
+		int ar1[] = { 17, 41, 00 }; // of next day's which is in Mesha raashi 9
 		int ar2[] = { 0, 50, 0 }; // of next day's which is Vrushabha
 		int swissEphermesisSun[] = { 22, 39, 28 };
-		int ar3[] = swissEphermesisSun;
+		int ar3[] = { 22, 39, 28 };
 		int ar4[] = { 23, 36, 42 };
 		date.set(2009, 7, 15); // for 15 July 2009
 
@@ -161,11 +169,11 @@ public class DegMinSec {
 		chaRaashi = chaRaashi + 1; // since it is moving to next raashi
 		ar2[0] = DegMinSec.absGeo(chaRaashi, ar2);
 
-		int chaMot[] = DegMinSec.minus(ar2, ar1);
-		// System.out.printf("Daily motion of Chandra is %s\n", Arrays.toString(chaMot));
+		int surMot[] = DegMinSec.minus(ar3, ar4);
+		System.out.printf("Daily motion of Soorya is %s\n", Arrays.toString(surMot));
 
-		int surMot[] = DegMinSec.minus(ar4, ar3);
-		// System.out.printf("Daily motion of Soorya is %s\n", Arrays.toString(surMot));
+		int chaMot[] = DegMinSec.minus(ar1, ar2);
+		System.out.printf("Daily motion of Chandra is %s\n", Arrays.toString(chaMot));
 
 		// Time taken to cover remainingDistance
 		System.out.printf("Tithi ends at %s from 5:30 IST or minus from 7am in PST?\n", Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Tithi.end(surMot, chaMot, Tithi.remainingDistance))));
@@ -180,7 +188,7 @@ public class DegMinSec {
 		System.out.printf("Chandra niraayana on %s from Swiss is %s\n", date.getTime(), Arrays.toString(chaNir));	
 
 		// static from pdf
-		// chaNir = new int[]{ 353, 41, 52 };
+		chaNir = new int[]{ 353, 41, 52 };
 
 		System.out.printf("Raashi is %s and remaining distance is %4.9f.\n", Raashi.raashi(chaNir), Raashi.remainingDistance);
 		// System.out.printf("Raashi ends at %s from 5:30 IST or minus from 7am in PST?\n", Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Raashi.tithiEnd(surMot, chaMot, Tithi.remainingDistance))));
