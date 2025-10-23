@@ -21,11 +21,11 @@ public class Ayanamsha {
 		grahaGeo[0] = DegMinSec.absGeo(raashi, grahaGeo);
 
 		// add 360 if less than ayanamsha
-		if(DegMinSec.degrees(grahaGeo) < ayanamsha)
+		if(DegMinSec.toDegrees(grahaGeo) < ayanamsha)
 			grahaGeo[0] = grahaGeo[0] + 360;
 
 		// System.out.println("Deg is " + DegMinSec.degrees(grahaGeo));
-		double niraGraha = DegMinSec.degrees(grahaGeo) - ayanamsha;
+		double niraGraha = DegMinSec.toDegrees(grahaGeo) - ayanamsha;
 		return niraGraha;
 	}
 
@@ -33,11 +33,11 @@ public class Ayanamsha {
 	public static double nirayaana(double ayanamsha, int[] grahaAbsGeo) throws Exception {
 
 		// add 360 if less than ayanamsha
-		if(DegMinSec.degrees(grahaAbsGeo) < ayanamsha)
+		if(DegMinSec.toDegrees(grahaAbsGeo) < ayanamsha)
 			grahaAbsGeo[0] = grahaAbsGeo[0] + 360;
 
 		// System.out.println("Deg is " + DegMinSec.degrees(grahaGeo));
-		double niraGraha = DegMinSec.degrees(grahaAbsGeo) - ayanamsha;
+		double niraGraha = DegMinSec.toDegrees(grahaAbsGeo) - ayanamsha;
 		return niraGraha;
 	}
 

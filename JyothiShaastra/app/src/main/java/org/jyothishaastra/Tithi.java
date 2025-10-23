@@ -30,7 +30,7 @@ public class Tithi {
 		if(chandraAbs[0] < sooryaAbs[0])
 			chandraAbs[0] = chandraAbs[0] + 360;
 
-		tithiDeg = DegMinSec.degrees(DegMinSec.minus(sooryaAbs, chandraAbs));
+		tithiDeg = DegMinSec.toDegrees(DegMinSec.minus(sooryaAbs, chandraAbs));
         // System.out.printf("Tithi deg is %4.9f\n", tithiDeg);
 
 		// Each Tithi is 12 degrees
@@ -66,6 +66,6 @@ public class Tithi {
 		   System.out.printf("3 is %4.9f\n", DegMinSec.toMinutes(remainingDistance));
 		   */
 		// endTime = RD/ (DMC - DMS) * 24
-		return (remainingDistance/ (DegMinSec.degrees(chaMot) - DegMinSec.degrees(surMot) ))  * 24;
+		return (remainingDistance/ (DegMinSec.toDegrees(chaMot) - DegMinSec.toDegrees(surMot) ))  * 24;
 	}
 }

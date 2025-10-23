@@ -22,7 +22,7 @@ public class DegMinSec {
 
 	// res is in "ddd.mmss" format
 	// get in degrees
-	public static double degrees(int degree, int minutes, int seconds){
+	public static double toDegrees(int degree, int minutes, int seconds){
         int abs = Math.abs(degree);
 
         if(degree == 0)
@@ -31,8 +31,8 @@ public class DegMinSec {
 		return Math.signum(degree) * (abs + (minutes / 60.0) + (seconds / 3600.0));
 	}
 
-	public static double degrees(int arr[]){
-		return degrees(arr[0], arr[1], arr[2]);
+	public static double toDegrees(int arr[]){
+		return toDegrees(arr[0], arr[1], arr[2]);
 	}
 
 	public static double toMinutes(double degrees){
@@ -44,7 +44,7 @@ public class DegMinSec {
 	// get in degrees, minutes and seconds, can be used as ar[0]-ar[1]-ar[2]
 	public static int[] getGeoCoords(int degree, int minutes, int seconds) {
 
-		double resDegrees = degrees(degree, minutes, seconds);
+		double resDegrees = toDegrees(degree, minutes, seconds);
 		return getGeoCoordsFromDegree(resDegrees);
 	}
 
@@ -76,22 +76,22 @@ public class DegMinSec {
 	}
 
 	public static int[] add(int dms1[], int dms2[]) {
-		double d1 = degrees(dms1);
-		double d2 = degrees(dms2);
+		double d1 = toDegrees(dms1);
+		double d2 = toDegrees(dms2);
 
 		double res = d1 + d2;
 		// System.out.println("Add is " + res);	
 
 		// if more than 360 subtract it from 360
 		if(res > 360)
-			return minus(getGeoCoordsFromDegree(res), getGeoCoordsFromDegree(degrees(360, 0, 0)));
+			return minus(getGeoCoordsFromDegree(res), getGeoCoordsFromDegree(toDegrees(360, 0, 0)));
 
 		return getGeoCoordsFromDegree(res);
 	}
 
 	public static int[] minus(int dms1[], int dms2[]) {
-		double d1 = degrees(dms1);
-		double d2 = degrees(dms2);
+		double d1 = toDegrees(dms1);
+		double d2 = toDegrees(dms2);
 
 		// swap
 		if(d1 > d2){
@@ -181,14 +181,14 @@ public class DegMinSec {
 
 		// int ar1[] = { Integer.parseInt(ags[0]), Integer.parseInt(ags[1]), Integer.parseInt(ags[2])};
 		int ar1[] = { 377, 41, 0 };
-		System.out.printf("Deg is %s\n", DegMinSec.degrees(ar1)); 
+		System.out.printf("Deg is %s\n", DegMinSec.toDegrees(ar1)); 
 		System.out.printf("Get Coords as arr is %s\n", Arrays.toString(DegMinSec.getGeoCoords(ar1))); 
 		// int ar2[] = { 284, 40, 20 };
 		// int ar2[] = { 344, 33, 15 };
 		// int ar2[] = { 164, 10, 9 };
 		// int ar2[] = { 112, 39, 28 };
 		int ar2[] = { 265, 1, 32 };
-		System.out.printf("Deg of ar2 is %s\n", DegMinSec.degrees(ar2)); 
+		System.out.printf("Deg of ar2 is %s\n", DegMinSec.toDegrees(ar2)); 
 		System.out.printf("Add arr is %s\n", Arrays.toString(DegMinSec.add(ar1, ar2))); 
 		System.out.printf("Minus arr is %s\n", Arrays.toString(DegMinSec.minus(ar1, ar2))); 
 		/* 

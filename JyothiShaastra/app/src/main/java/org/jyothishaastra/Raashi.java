@@ -20,7 +20,7 @@ public class Raashi {
 	// raashi no. like Mesha is 1.
 	public static String raashi(int chaNirAbs[]) throws Exception {
 
-		chaDeg = DegMinSec.degrees(chaNirAbs);
+		chaDeg = DegMinSec.toDegrees(chaNirAbs);
         // System.out.printf("Chandra deg is %4.9f\n", chaDeg);
 
 /* 

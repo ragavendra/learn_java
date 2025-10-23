@@ -21,7 +21,7 @@ public class Nakshatra {
 	// raashi no. like Mesha is 1.
 	public static String nakshatra(int chaNirAbs[]) throws Exception {
 
-		nakshDeg = DegMinSec.degrees(chaNirAbs);
+		nakshDeg = DegMinSec.toDegrees(chaNirAbs);
         System.out.printf("Chandra deg is %4.9f\n", nakshDeg);
 
 /* 
@@ -52,7 +52,7 @@ public class Nakshatra {
 		   System.out.printf("3 is %4.9f\n", DegMinSec.toMinutes(remainingDistance));
 		   */
 		// endTime = RD/ (DMC - DMS) * 24
-		return (remainingDistance/ DegMinSec.degrees(chaMot))  * 24;
+		return (remainingDistance/ DegMinSec.toDegrees(chaMot))  * 24;
 	}
 
 }
