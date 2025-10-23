@@ -24,10 +24,8 @@ public class Nakshatra {
 		nakshDeg = DegMinSec.toDegrees(chaNirAbs);
         System.out.printf("Chandra deg is %4.9f\n", nakshDeg);
 
-/* 
 		if(nakshDeg > 360)
 			nakshDeg = nakshDeg - 360;
-*/
 
 		double nakshSectorSize = (360.0 / 27.0);
 

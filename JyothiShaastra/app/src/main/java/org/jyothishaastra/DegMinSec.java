@@ -123,6 +123,8 @@ public class DegMinSec {
 		System.out.printf("Aya is %s degrees\n", ayanamsha);	
 
 		// Mesha is 1
+		/*
+		 *  for 22nd Oct
 		int surRaashi = 7;
 		int chaRaashi = 8;
 		int swissEphermesisMoon[] = { 4, 7, 00 };
@@ -131,6 +133,18 @@ public class DegMinSec {
 		int swissEphermesisSun[] = { 28, 50, 42 };
 		int ar3[] = { 28, 50, 42 };
 		int ar4[] = { 29, 50, 25 };
+		 */
+
+		// for 15 July 2009
+		int surRaashi = 4; // Karkaataka
+		int chaRaashi = 1; // Mesha
+		int swissEphermesisMoon[] = { 17, 41, 00 };
+		int ar1[] = swissEphermesisMoon; // of next day's which is in Mesha raashi 9
+		int ar2[] = { 0, 50, 0 }; // of next day's which is Vrushabha
+		int swissEphermesisSun[] = { 22, 39, 28 };
+		int ar3[] = swissEphermesisSun;
+		int ar4[] = { 23, 36, 42 };
+		date.set(2009, 7, 15); // for 15 July 2009
 
 		int chandraAbs[] = swissEphermesisMoon;
 		chandraAbs[0] = DegMinSec.absGeo(chaRaashi, swissEphermesisMoon);
@@ -142,33 +156,36 @@ public class DegMinSec {
 		System.out.printf("Tithi is %s and remaining distance is %4.9f.\n", Tithi.tithi(chandraAbs, sooryaAbs), Tithi.remainingDistance);
 
 		/*uncomment when Chandra has moved to next Raashi 
-		  ar1[0] = DegMinSec.absGeo(chaRaashi, ar1);
-		  chaRaashi = chaRaashi + 1; // since it is moving to Mesha 9 raashi
-		  ar2[0] = DegMinSec.absGeo(chaRaashi, ar2);
 		*/
+		// ar1[0] = DegMinSec.absGeo(chaRaashi, ar1);
+		chaRaashi = chaRaashi + 1; // since it is moving to next raashi
+		ar2[0] = DegMinSec.absGeo(chaRaashi, ar2);
 
-        int chaMot[] = DegMinSec.minus(ar2, ar1);
+		int chaMot[] = DegMinSec.minus(ar2, ar1);
 		// System.out.printf("Daily motion of Chandra is %s\n", Arrays.toString(chaMot));
 
-        int surMot[] = DegMinSec.minus(ar4, ar3);
+		int surMot[] = DegMinSec.minus(ar4, ar3);
 		// System.out.printf("Daily motion of Soorya is %s\n", Arrays.toString(surMot));
 
-        // Time taken to cover remainingDistance
-        System.out.printf("Tithi ends at %s from 5:30 IST or minus from 7am in PST?\n", Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Tithi.end(surMot, chaMot, Tithi.remainingDistance))));
+		// Time taken to cover remainingDistance
+		System.out.printf("Tithi ends at %s from 5:30 IST or minus from 7am in PST?\n", Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Tithi.end(surMot, chaMot, Tithi.remainingDistance))));
 
 		System.out.printf("Karana is %s and remaining distance is %4.9f.\n", Karana.karana(chandraAbs, sooryaAbs), Karana.remainingDistance);
-        // System.out.printf("Karana ends at %s from 5:30 IST or minus from 7am in PST?\n", Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Karana.tithiEnd(surMot, chaMot, Tithi.remainingDistance))));
-	
+		// System.out.printf("Karana ends at %s from 5:30 IST or minus from 7am in PST?\n", Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Karana.tithiEnd(surMot, chaMot, Tithi.remainingDistance))));
+
 		int surNir[] = DegMinSec.getGeoCoordsFromDegree(Ayanamsha.nirayaana(ayanamsha, sooryaAbs));
 		// System.out.printf("Soorya niraayana on %s from Swiss is %s\n", date.getTime(), Arrays.toString(surNir));	
 
 		int[] chaNir = DegMinSec.getGeoCoordsFromDegree(Ayanamsha.nirayaana(ayanamsha, chandraAbs));
-		// System.out.printf("Chandra niraayana on %s from Swiss is %s\n", date.getTime(), Arrays.toString(chaNir));	
+		System.out.printf("Chandra niraayana on %s from Swiss is %s\n", date.getTime(), Arrays.toString(chaNir));	
 
-		System.out.printf("Raashi is %s and remaining distance is %4.9f.\n", Raashi.raashi(chandraAbs), Raashi.remainingDistance);
-        // System.out.printf("Raashi ends at %s from 5:30 IST or minus from 7am in PST?\n", Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Raashi.tithiEnd(surMot, chaMot, Tithi.remainingDistance))));
-		System.out.printf("Nakshatra is %s and remaining distance is %4.9f.\n", Nakshatra.nakshatra(chandraAbs), Nakshatra.remainingDistance);
-        System.out.printf("Nakshatra ends at %s from 5:30 IST or minus from 7am in PST?\n", Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Nakshatra.end(chaMot, Tithi.remainingDistance))));
+		// static from pdf
+		// chaNir = new int[]{ 353, 41, 52 };
+
+		System.out.printf("Raashi is %s and remaining distance is %4.9f.\n", Raashi.raashi(chaNir), Raashi.remainingDistance);
+		// System.out.printf("Raashi ends at %s from 5:30 IST or minus from 7am in PST?\n", Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Raashi.tithiEnd(surMot, chaMot, Tithi.remainingDistance))));
+		System.out.printf("Nakshatra is %s and remaining distance is %4.9f.\n", Nakshatra.nakshatra(chaNir), Nakshatra.remainingDistance);
+		System.out.printf("Nakshatra ends at %s from 5:30 IST or minus from 7am in PST?\n", Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Nakshatra.end(chaMot, Tithi.remainingDistance))));
 	}
 
 	public static void mainThisClass(String ags[]) throws Exception {
