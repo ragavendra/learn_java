@@ -4,22 +4,6 @@ import java.util.Calendar;
 
 public class DegMinSec {
 
-/* 
-		// calc deg-min-sec to deg 
-		dd = Math.signum(d) * (Math.abs(d) + (m / 60.0) + (s / 3600.0));
-
-		// res is in "ddd.mmss" format
-		jshell> decimal res = Math.signum(6) * (Math.abs(6) + (18 / 60.0) + (34 / 3600.0));
-		$48 ==> 6.309444444444444
-
-		// the res can be added to some other no, then do below to get d-m-s
-
-		d = (int)dd;  // Truncate the decimals
-		t1 = (dd - d) * 60;
-		m = (int)t1;
-		s = (t1 - m) * 60;
-*/
-
 	// res is in "ddd.mmss" format
 	// get in degrees
 	public static double toDegrees(int degree, int minutes, int seconds){
