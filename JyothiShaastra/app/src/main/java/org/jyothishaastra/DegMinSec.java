@@ -213,7 +213,8 @@ are:
 		System.out.printf("Nakshatra is %s and remaining distance is %4.9f.\n", Nakshatra.nakshatra(chaNir), Nakshatra.remainingDistance);
 
 		// "Nakshatra ends at %s from 5:30 IST or minus from 7am in PST?\n"
-		System.out.printf("Nakshatra ends at %s for Cha mot %s and RD %s\n", Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Nakshatra.end(chaMot, Nakshatra.remainingDistance))), Arrays.toString(chaMot), Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Nakshatra.remainingDistance)));
+		System.out.printf("Nakshatra ends at %s from 5:30 IST or minus from 7am in PST?\n", Nakshatra.end(chaMot, Nakshatra.remainingDistance));
+		// System.out.printf("Nakshatra ends at %s for Cha mot %s and RD %s\n", Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Nakshatra.end(chaMot, Nakshatra.remainingDistance))), Arrays.toString(chaMot), Arrays.toString(DegMinSec.getGeoCoordsFromDegree(Nakshatra.remainingDistance)));
 	}
 
 	public static void mainThisClass(String ags[]) throws Exception {
